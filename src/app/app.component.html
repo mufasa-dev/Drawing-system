@@ -1,15 +1,15 @@
 <div class="top-menu">
-  <button>Salvar</button>
+  <button class="btn">Salvar</button>
 </div>
 
 <div class="container-draw">
-  <div class="container-tools">
-    <button>
+  <div class="container-tools p-1">
+    <button class="btn" [ngbTooltip]="'Pincél'">
       <fa-icon [icon]="faPencil"></fa-icon>
     </button>
     <input type="color" (change)="changeColor($event)" />
   </div>
-  <div class="my-canva">
+  <div class="my-canva p-1">
     <canvas #canvas id="myCanva" width="800" height="600"
       (mousedown)="startDrawing($event)"
       (mousemove)="draw($event)"
