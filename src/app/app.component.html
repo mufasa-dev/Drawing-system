@@ -4,7 +4,9 @@
 
 <div class="container-draw">
   <div class="container-tools">
-    <button>Lapis</button>
+    <button>
+      <fa-icon [icon]="faPencil"></fa-icon>
+    </button>
     <input type="color" (change)="changeColor($event)" />
   </div>
   <div class="my-canva">
