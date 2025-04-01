@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 @Component({
   selector: 'app-root',
-  imports: [FontAwesomeModule],
+  imports: [ FontAwesomeModule, NgbModule ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
