@@ -8,11 +8,15 @@ import { faPencil } from "@fortawesome/free-solid-svg-icons";
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements AfterViewInit {
+
   @ViewChild('canvas') canva!: ElementRef<HTMLCanvasElement>;
+
   private drawing: boolean = false;
   public ctx!: CanvasRenderingContext2D;
 
   public faPencil = faPencil;
+
+  constructor() {}
 
   ngAfterViewInit(): void {
     let ctx = this.canva.nativeElement.getContext('2d');
