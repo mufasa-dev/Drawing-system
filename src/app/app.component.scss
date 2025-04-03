@@ -11,6 +11,13 @@
     .container-tools {
       display: flex;
       flex-direction: column;
+      .btn {
+        cursor: pointer;
+        &:hover {
+          background-color: aqua;
+          color: white;
+        }
+      }
     }
 }
 
