@@ -10,11 +10,13 @@
     <input type="color" (change)="changeColor($event)" />
   </div>
   <div class="my-canva p-1">
-    <canvas #canvas id="myCanva" width="800" height="600"
-      (mousedown)="startDrawing($event)"
-      (mousemove)="draw($event)"
-      (mouseup)="stopDrawing()"
-      (mouseleave)="stopDrawing()">
-    </canvas>
+    @if (isBrowser) {
+      <canvas #canvas id="myCanva" width="800" height="600"
+        (mousedown)="startDrawing($event)"
+        (mousemove)="draw($event)"
+        (mouseup)="stopDrawing()"
+        (mouseleave)="stopDrawing()">
+      </canvas>
+    }
   </div>
 </div>

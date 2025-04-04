@@ -12,28 +12,37 @@ import { PLATFORM_ID } from '@angular/core';
 })
 export class AppComponent implements AfterViewInit {
 
-  @ViewChild('canvas') canva!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('myCanva', { static: false }) canva!: ElementRef<HTMLCanvasElement>;
 
   private drawing: boolean = false;
   public ctx!: CanvasRenderingContext2D;
+  public isBrowser: boolean = false;
 
   public faPencil = faPencil;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-      const ctx = canvas.getContext('2d');
-      if (ctx == null) return;
+    this.startCanvas();
+  }
+
+  startCanvas(): void {
+    if (this.isBrowser) {
+      const ctx = this.canva.nativeElement.getContext('2d');
+      debugger;
+      if (ctx == null) {
+        console.log('error get ctx', this.canva)
+        return;
+      }
       this.ctx = ctx;
-      this.ctx.fillStyle = 'blue';
-      this.ctx.fillRect(0, 0, 200, 200);
     }
   }
 
   startDrawing(event: MouseEvent) {
     this.drawing = true;
+    if (!this.ctx) this.startCanvas();
     this.ctx.beginPath;
     this.ctx.moveTo(event.offsetX, event.offsetY);
   }
@@ -44,6 +53,7 @@ export class AppComponent implements AfterViewInit {
 
   draw(event: MouseEvent) {
     if (!this.drawing) return;
+    if (!this.ctx) this.startCanvas();
     this.ctx.lineTo(event.offsetX, event.offsetY);
     this.ctx.stroke();
   }
