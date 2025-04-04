@@ -1,7 +1,9 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 @Component({
   selector: 'app-root',
   imports: [ FontAwesomeModule, NgbModule ],
@@ -17,11 +19,17 @@ export class AppComponent implements AfterViewInit {
 
   public faPencil = faPencil;
 
-  constructor() {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngAfterViewInit(): void {
-    let ctx = this.canva.nativeElement.getContext('2d');
-    if (ctx) this.ctx = ctx;
+    if (isPlatformBrowser(this.platformId)) {
+      const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+      const ctx = canvas.getContext('2d');
+      if (ctx == null) return;
+      this.ctx = ctx;
+      this.ctx.fillStyle = 'blue';
+      this.ctx.fillRect(0, 0, 200, 200);
+    }
   }
 
   startDrawing(event: MouseEvent) {
