@@ -16,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 export class AppComponent implements AfterViewInit {
 
   @ViewChild('canvas', { static: false }) canva!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('previewCanvas', { static: false }) previewCanvasRef!: ElementRef<HTMLCanvasElement>;
 
   public tool: Tool = Tool.Pencil;
 
@@ -92,6 +93,8 @@ export class AppComponent implements AfterViewInit {
     this.ctx.globalCompositeOperation = originalComposite;
     this.ctx.strokeStyle = originalStroke;
     this.ctx.lineWidth = originalWidth;
+
+    this.updatePreview();
   }
 
   selectTool(tool: Tool) {
@@ -119,6 +122,8 @@ export class AppComponent implements AfterViewInit {
     this.ctx.strokeStyle = '#000';
 
     this.ctx.putImageData(imageData, 0, 0);
+
+    this.updatePreview();
   }
 
   applyResize(modal: any) {
@@ -135,6 +140,24 @@ export class AppComponent implements AfterViewInit {
     this.tempDrawName = this.drawName
     this.modalService.open(content, { centered: true });
   }
+
+  updatePreview() {
+    if (!this.previewCanvasRef || !this.canva) return;
+
+    const mainCanvas = this.canva.nativeElement;
+    const previewCanvas = this.previewCanvasRef.nativeElement;
+    const previewCtx = previewCanvas.getContext('2d');
+    if (!previewCtx) return;
+
+    previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+
+    previewCtx.drawImage(
+      mainCanvas,
+      0, 0, mainCanvas.width, mainCanvas.height,
+      0, 0, previewCanvas.width, previewCanvas.height
+    );
+  }
+
 
   saveDrawing() {
     if (!this.ctx || !this.canva) return;
@@ -181,6 +204,8 @@ export class AppComponent implements AfterViewInit {
     };
 
     reader.readAsDataURL(file);
+
+    this.updatePreview();
   }
 
 }
