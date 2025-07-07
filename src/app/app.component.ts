@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faEraser, faPencil, faSave } from "@fortawesome/free-solid-svg-icons";
+import { faEraser, faPencil, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
@@ -30,6 +30,7 @@ export class AppComponent implements AfterViewInit {
   public faPencil = faPencil;
   public faEraser = faEraser;
   public faSave = faSave;
+  public faUpload = faUpload;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -105,4 +106,23 @@ export class AppComponent implements AfterViewInit {
     link.download = 'desenho.png';
     link.click();
   }
+
+  handleImageUpload(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        this.ctx.drawImage(img, 0, 0);
+      };
+      img.src = e.target?.result as string;
+    };
+
+    reader.readAsDataURL(file);
+  }
+
 }

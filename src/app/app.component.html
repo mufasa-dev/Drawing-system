@@ -3,6 +3,16 @@
     <fa-icon [icon]="faSave"></fa-icon>
   </button>
 
+  <label class="btn btn-opt ms-1" [ngbTooltip]="'Enviar imagem'">
+    <fa-icon [icon]="faUpload"></fa-icon>
+    <input
+      type="file"
+      accept="image/*"
+      (change)="handleImageUpload($event)"
+      hidden
+    />
+  </label>
+
   <div class="container-slider-tools">
     <label class="form-label me-2 mb-0">Tamanho:</label>
     <input
