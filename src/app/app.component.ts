@@ -25,9 +25,14 @@ export class AppComponent implements AfterViewInit {
   public lastX: number = 0;
   public lastY: number = 0;
   public lineWidth: number = 5;
+  public drawName: string = "image";
   public canvasWidth: number = 800;
   public canvasHeight: number = 600;
   public Tool = Tool;
+
+  public tempDrawName: string = "image";
+  public tempCanvasWidth: number = 800;
+  public tempCanvasHeight: number = 600;
 
   public faPencil = faPencil;
   public faEraser = faEraser;
@@ -117,11 +122,17 @@ export class AppComponent implements AfterViewInit {
   }
 
   applyResize(modal: any) {
+    this.drawName = this.tempDrawName;
+    this.canvasHeight = this.tempCanvasHeight;
+    this.canvasWidth = this.tempCanvasWidth;
     this.resizeCanvas();
     modal.close();
   }
 
   openResizeModal(content: any) {
+    this.tempCanvasHeight = this.canvasHeight;
+    this.tempCanvasWidth = this.canvasWidth;
+    this.tempDrawName = this.drawName
     this.modalService.open(content, { centered: true });
   }
 
@@ -133,7 +144,7 @@ export class AppComponent implements AfterViewInit {
 
     const link = document.createElement('a');
     link.href = image;
-    link.download = 'desenho.png';
+    link.download = this.drawName + '.png';
     link.click();
   }
 

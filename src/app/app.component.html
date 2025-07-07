@@ -70,12 +70,22 @@
   <div class="modal-body">
     <form class="d-flex flex-column gap-3">
       <div class="form-group">
+        <label for="canvasWidth">Nome:</label>
+        <input
+          type="text"
+          id="drawName"
+          class="form-control"
+          [(ngModel)]="tempDrawName"
+          name="drawName"
+        />
+      </div>
+      <div class="form-group">
         <label for="canvasWidth">Largura:</label>
         <input
           type="number"
           id="canvasWidth"
           class="form-control"
-          [(ngModel)]="canvasWidth"
+          [(ngModel)]="tempCanvasWidth"
           name="canvasWidth"
         />
       </div>
@@ -85,7 +95,7 @@
           type="number"
           id="canvasHeight"
           class="form-control"
-          [(ngModel)]="canvasHeight"
+          [(ngModel)]="tempCanvasHeight"
           name="canvasHeight"
         />
       </div>
@@ -93,6 +103,8 @@
   </div>
   <div class="modal-footer">
     <button class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
-    <button class="btn btn-primary" (click)="applyResize(modal)">Aplicar</button>
+    <button class="btn btn-primary" (click)="applyResize(modal)">
+      <fa-icon [icon]="faSave"></fa-icon> Salvar
+    </button>
   </div>
 </ng-template>
