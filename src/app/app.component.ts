@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faEraser, faPencil } from "@fortawesome/free-solid-svg-icons";
+import { faEraser, faPencil, faSave } from "@fortawesome/free-solid-svg-icons";
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
@@ -27,6 +27,7 @@ export class AppComponent implements AfterViewInit {
 
   public faPencil = faPencil;
   public faEraser = faEraser;
+  public faSave = faSave;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -82,5 +83,17 @@ export class AppComponent implements AfterViewInit {
   changeColor(event: Event) {
     const input = event.target as HTMLInputElement;
     this.ctx.strokeStyle = input.value;
+  }
+
+  saveDrawing() {
+    if (!this.ctx || !this.canva) return;
+
+    const canvas = this.canva.nativeElement;
+    const image = canvas.toDataURL('image/png');
+
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = 'desenho.png';
+    link.click();
   }
 }
