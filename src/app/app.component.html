@@ -4,10 +4,16 @@
 
 <div class="container-draw">
   <div class="container-tools p-1">
-    <button class="btn" [ngbTooltip]="'Pincel'" (click)="selectTool('pencil')">
+    <button class="btn btn-tool" 
+      [class.active]="tool === 'pencil'"
+      [ngbTooltip]="'Pincel'" 
+      (click)="selectTool(Tool.Pencil)">
       <fa-icon [icon]="faPencil"></fa-icon>
     </button>
-    <button class="btn" [ngbTooltip]="'Borracha'" (click)="selectTool('eraser')">
+    <button class="btn btn-tool" 
+      [class.active]="tool === 'eraser'"
+      [ngbTooltip]="'Borracha'" 
+      (click)="selectTool(Tool.Eraser)">
       <fa-icon [icon]="faEraser"></fa-icon>
     </button>
     <input type="color" (change)="changeColor($event)" />

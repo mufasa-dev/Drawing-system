@@ -4,6 +4,8 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { faEraser, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
+import { Tool } from '../enum/tools.enum';
+
 @Component({
   selector: 'app-root',
   imports: [ FontAwesomeModule, NgbModule ],
@@ -14,13 +16,14 @@ export class AppComponent implements AfterViewInit {
 
   @ViewChild('canvas', { static: false }) canva!: ElementRef<HTMLCanvasElement>;
 
-  public tool: 'pencil' | 'eraser' = 'pencil';
+  public tool: Tool = Tool.Pencil;
 
   private drawing: boolean = false;
   public ctx!: CanvasRenderingContext2D;
   public isBrowser: boolean = false;
   public lastX: number = 0;
   public lastY: number = 0;
+  public Tool = Tool;
 
   public faPencil = faPencil;
   public faEraser = faEraser;
@@ -59,7 +62,7 @@ export class AppComponent implements AfterViewInit {
   draw(event: MouseEvent) {
     if (!this.drawing) return;
     if (!this.ctx) this.startCanvas();
-
+    
     const originalStroke = this.ctx.strokeStyle;
 
     if (this.tool === 'eraser') {
@@ -72,7 +75,7 @@ export class AppComponent implements AfterViewInit {
     this.ctx.strokeStyle = originalStroke;
   }
 
-  selectTool(tool: 'pencil' | 'eraser') {
+  selectTool(tool: Tool) {
     this.tool = tool;
   }
 

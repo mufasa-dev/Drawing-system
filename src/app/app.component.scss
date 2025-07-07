@@ -11,15 +11,19 @@
     .container-tools {
       display: flex;
       flex-direction: column;
-      .btn {
-        cursor: pointer;
-        margin-bottom: 5px;
-        border: 1px solid #ccc;
-        &:hover {
-          background-color: #a3cedf;
-        }
-      }
     }
+}
+
+.btn-tool {
+  cursor: pointer;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  &:hover {
+    background-color: #a3cedf;
+  }
+  &.active {
+    background-color: #a3cedf;
+  }
 }
 
 #myCanva {
