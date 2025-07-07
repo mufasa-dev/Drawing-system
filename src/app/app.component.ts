@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
+import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faEraser, faPencil, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faCogs, faEraser, faPencil, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
@@ -25,16 +25,19 @@ export class AppComponent implements AfterViewInit {
   public lastX: number = 0;
   public lastY: number = 0;
   public lineWidth: number = 5;
+  public canvasWidth: number = 800;
+  public canvasHeight: number = 600;
   public Tool = Tool;
 
   public faPencil = faPencil;
   public faEraser = faEraser;
   public faSave = faSave;
   public faUpload = faUpload;
+  public faCogs = faCogs;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-  }
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private modalService: NgbModal) {
+  this.isBrowser = isPlatformBrowser(this.platformId);
+}
 
   ngAfterViewInit(): void {
     this.startCanvas();
@@ -95,6 +98,33 @@ export class AppComponent implements AfterViewInit {
     this.ctx.strokeStyle = input.value;
   }
 
+  resizeCanvas() {
+    if (!this.canva) return;
+
+    const canvas = this.canva.nativeElement;
+
+    const imageData = this.ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    canvas.width = this.canvasWidth;
+    canvas.height = this.canvasHeight;
+
+    this.ctx = canvas.getContext('2d')!;
+    this.ctx.lineCap = 'round';
+    this.ctx.lineWidth = this.lineWidth;
+    this.ctx.strokeStyle = '#000';
+
+    this.ctx.putImageData(imageData, 0, 0);
+  }
+
+  applyResize(modal: any) {
+    this.resizeCanvas();
+    modal.close();
+  }
+
+  openResizeModal(content: any) {
+    this.modalService.open(content, { centered: true });
+  }
+
   saveDrawing() {
     if (!this.ctx || !this.canva) return;
 
@@ -108,7 +138,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   handleImageUpload(event: Event) {
-    const input = event.target as HTMLInputElement;
+     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
 
     const file = input.files[0];
@@ -117,6 +147,23 @@ export class AppComponent implements AfterViewInit {
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
+        // 🔁 Redimensiona o canvas ANTES de desenhar
+        this.canvasWidth = img.width;
+        this.canvasHeight = img.height;
+
+        const canvas = this.canva.nativeElement;
+
+        // Redimensiona o elemento
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Recria contexto
+        this.ctx = canvas.getContext('2d')!;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineWidth = this.lineWidth;
+        this.ctx.strokeStyle = '#000';
+
+        // ✅ Agora é seguro desenhar a imagem
         this.ctx.drawImage(img, 0, 0);
       };
       img.src = e.target?.result as string;
