@@ -5,10 +5,11 @@ import { faEraser, faPencil, faSave } from "@fortawesome/free-solid-svg-icons";
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
-  imports: [ FontAwesomeModule, NgbModule ],
+  imports: [ FontAwesomeModule, NgbModule, FormsModule ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -23,6 +24,7 @@ export class AppComponent implements AfterViewInit {
   public isBrowser: boolean = false;
   public lastX: number = 0;
   public lastY: number = 0;
+  public lineWidth: number = 5;
   public Tool = Tool;
 
   public faPencil = faPencil;
@@ -66,8 +68,11 @@ export class AppComponent implements AfterViewInit {
     
     const originalComposite = this.ctx.globalCompositeOperation;
     const originalStroke = this.ctx.strokeStyle;
+    const originalWidth = this.ctx.lineWidth;
 
-    if (this.tool === 'eraser') {
+    this.ctx.lineWidth = this.lineWidth;
+
+    if (this.tool === Tool.Eraser) {
       this.ctx.globalCompositeOperation = 'destination-out';
       this.ctx.strokeStyle = 'rgba(0,0,0,1)'; 
     }
@@ -77,6 +82,7 @@ export class AppComponent implements AfterViewInit {
 
     this.ctx.globalCompositeOperation = originalComposite;
     this.ctx.strokeStyle = originalStroke;
+    this.ctx.lineWidth = originalWidth;
   }
 
   selectTool(tool: Tool) {

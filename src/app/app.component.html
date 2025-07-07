@@ -1,7 +1,20 @@
 <div class="top-menu">
-  <button class="btn" (click)="saveDrawing()">
-    <fa-icon [icon]="faSave"></fa-icon> Salvar
+  <button class="btn btn-opt" (click)="saveDrawing()" [ngbTooltip]="'Salvar'">
+    <fa-icon [icon]="faSave"></fa-icon>
   </button>
+
+  <div class="container-slider-tools">
+    <label class="form-label me-2 mb-0">Tamanho:</label>
+    <input
+      type="range"
+      min="1"
+      max="50"
+      [(ngModel)]="lineWidth"
+      class="form-range"
+      style="width: 150px;"
+    />
+    <span class="ms-1">{{ lineWidth }} px</span>
+  </div>
 </div>
 
 <div class="container-draw">
