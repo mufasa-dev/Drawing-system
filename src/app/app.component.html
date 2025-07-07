@@ -13,6 +13,10 @@
     />
   </label>
 
+  <button class="btn btn-opt ms-1" (click)="openResizeModal(resizeModal)" [ngbTooltip]="'Opções'">
+    <fa-icon [icon]="faCogs"></fa-icon>
+  </button>
+
   <div class="container-slider-tools">
     <label class="form-label me-2 mb-0">Tamanho:</label>
     <input
@@ -45,7 +49,9 @@
   </div>
   <div class="my-canva p-1">
     @if (isBrowser) {
-      <canvas #canvas id="myCanva" width="800" height="600"
+      <canvas #canvas id="myCanva"
+        [attr.width]="canvasWidth"
+        [attr.height]="canvasHeight"
         (mousedown)="startDrawing($event)"
         (mousemove)="draw($event)"
         (mouseup)="stopDrawing()"
@@ -54,3 +60,39 @@
     }
   </div>
 </div>
+
+
+<ng-template #resizeModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Redimensionar Canvas</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form class="d-flex flex-column gap-3">
+      <div class="form-group">
+        <label for="canvasWidth">Largura:</label>
+        <input
+          type="number"
+          id="canvasWidth"
+          class="form-control"
+          [(ngModel)]="canvasWidth"
+          name="canvasWidth"
+        />
+      </div>
+      <div class="form-group">
+        <label for="canvasHeight">Altura:</label>
+        <input
+          type="number"
+          id="canvasHeight"
+          class="form-control"
+          [(ngModel)]="canvasHeight"
+          name="canvasHeight"
+        />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
+    <button class="btn btn-primary" (click)="applyResize(modal)">Aplicar</button>
+  </div>
+</ng-template>
