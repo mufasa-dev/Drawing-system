@@ -4,8 +4,11 @@
 
 <div class="container-draw">
   <div class="container-tools p-1">
-    <button class="btn" [ngbTooltip]="'Pincel'">
+    <button class="btn" [ngbTooltip]="'Pincel'" (click)="selectTool('pencil')">
       <fa-icon [icon]="faPencil"></fa-icon>
+    </button>
+    <button class="btn" [ngbTooltip]="'Borracha'" (click)="selectTool('eraser')">
+      <fa-icon [icon]="faEraser"></fa-icon>
     </button>
     <input type="color" (change)="changeColor($event)" />
   </div>

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import { faEraser, faPencil } from "@fortawesome/free-solid-svg-icons";
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 @Component({
@@ -14,6 +14,8 @@ export class AppComponent implements AfterViewInit {
 
   @ViewChild('canvas', { static: false }) canva!: ElementRef<HTMLCanvasElement>;
 
+  public tool: 'pencil' | 'eraser' = 'pencil';
+
   private drawing: boolean = false;
   public ctx!: CanvasRenderingContext2D;
   public isBrowser: boolean = false;
@@ -21,6 +23,7 @@ export class AppComponent implements AfterViewInit {
   public lastY: number = 0;
 
   public faPencil = faPencil;
+  public faEraser = faEraser;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -56,8 +59,21 @@ export class AppComponent implements AfterViewInit {
   draw(event: MouseEvent) {
     if (!this.drawing) return;
     if (!this.ctx) this.startCanvas();
+
+    const originalStroke = this.ctx.strokeStyle;
+
+    if (this.tool === 'eraser') {
+      this.ctx.strokeStyle = '#FFFFFF';
+    }
+
     this.ctx.lineTo(event.offsetX, event.offsetY);
     this.ctx.stroke();
+
+    this.ctx.strokeStyle = originalStroke;
+  }
+
+  selectTool(tool: 'pencil' | 'eraser') {
+    this.tool = tool;
   }
 
   changeColor(event: Event) {
