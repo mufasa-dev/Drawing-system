@@ -64,15 +64,18 @@ export class AppComponent implements AfterViewInit {
     if (!this.drawing) return;
     if (!this.ctx) this.startCanvas();
     
+    const originalComposite = this.ctx.globalCompositeOperation;
     const originalStroke = this.ctx.strokeStyle;
 
     if (this.tool === 'eraser') {
-      this.ctx.strokeStyle = '#FFFFFF';
+      this.ctx.globalCompositeOperation = 'destination-out';
+      this.ctx.strokeStyle = 'rgba(0,0,0,1)'; 
     }
 
     this.ctx.lineTo(event.offsetX, event.offsetY);
     this.ctx.stroke();
 
+    this.ctx.globalCompositeOperation = originalComposite;
     this.ctx.strokeStyle = originalStroke;
   }
 
