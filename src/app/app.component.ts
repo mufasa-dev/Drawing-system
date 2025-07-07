@@ -12,11 +12,13 @@ import { PLATFORM_ID } from '@angular/core';
 })
 export class AppComponent implements AfterViewInit {
 
-  @ViewChild('myCanva', { static: false }) canva!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvas', { static: false }) canva!: ElementRef<HTMLCanvasElement>;
 
   private drawing: boolean = false;
   public ctx!: CanvasRenderingContext2D;
   public isBrowser: boolean = false;
+  public lastX: number = 0;
+  public lastY: number = 0;
 
   public faPencil = faPencil;
 
@@ -43,7 +45,7 @@ export class AppComponent implements AfterViewInit {
   startDrawing(event: MouseEvent) {
     this.drawing = true;
     if (!this.ctx) this.startCanvas();
-    this.ctx.beginPath;
+    this.ctx.beginPath();
     this.ctx.moveTo(event.offsetX, event.offsetY);
   }
 
