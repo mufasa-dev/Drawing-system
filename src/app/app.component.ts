@@ -1,11 +1,12 @@
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faCogs, faEraser, faPencil, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faCogs, faEraser, faPencil, faPlus, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
 import { FormsModule } from '@angular/forms';
+import { Layer } from '../model/layer.model';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,8 @@ export class AppComponent implements AfterViewInit {
   public lastX: number = 0;
   public lastY: number = 0;
   public lineWidth: number = 5;
+  public layers: Layer[] = [];
+  public activeLayerId: string = '';
   public drawName: string = "image";
   public canvasWidth: number = 800;
   public canvasHeight: number = 600;
@@ -40,19 +43,21 @@ export class AppComponent implements AfterViewInit {
   public faSave = faSave;
   public faUpload = faUpload;
   public faCogs = faCogs;
+  public faPlus = faPlus;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private modalService: NgbModal) {
-  this.isBrowser = isPlatformBrowser(this.platformId);
-}
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   ngAfterViewInit(): void {
-    this.startCanvas();
+     if (this.isBrowser) {
+      this.createLayer('Camada 1');
+    }
   }
 
   startCanvas(): void {
     if (this.isBrowser) {
       const ctx = this.canva.nativeElement.getContext('2d');
-      debugger;
       if (ctx == null) {
         console.log('error get ctx', this.canva)
         return;
@@ -62,10 +67,15 @@ export class AppComponent implements AfterViewInit {
   }
 
   startDrawing(event: MouseEvent) {
+    const layer = this.layers.find(l => l.id === this.activeLayerId);
+    if (!layer) return;
+
     this.drawing = true;
-    if (!this.ctx) this.startCanvas();
-    this.ctx.beginPath();
-    this.ctx.moveTo(event.offsetX, event.offsetY);
+
+    const ctx = layer.ctx;
+
+    ctx.beginPath();
+    ctx.moveTo(event.offsetX, event.offsetY);
   }
 
   stopDrawing() {
@@ -74,27 +84,32 @@ export class AppComponent implements AfterViewInit {
 
   draw(event: MouseEvent) {
     if (!this.drawing) return;
-    if (!this.ctx) this.startCanvas();
-    
-    const originalComposite = this.ctx.globalCompositeOperation;
-    const originalStroke = this.ctx.strokeStyle;
-    const originalWidth = this.ctx.lineWidth;
 
-    this.ctx.lineWidth = this.lineWidth;
+    const layer = this.layers.find(l => l.id === this.activeLayerId);
+    if (!layer) return;
+
+    const ctx = layer.ctx;
+
+    const originalComposite = ctx.globalCompositeOperation;
+    const originalStroke = ctx.strokeStyle;
+    const originalWidth = ctx.lineWidth;
+
+    ctx.lineWidth = this.lineWidth;
 
     if (this.tool === Tool.Eraser) {
-      this.ctx.globalCompositeOperation = 'destination-out';
-      this.ctx.strokeStyle = 'rgba(0,0,0,1)'; 
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
     }
 
-    this.ctx.lineTo(event.offsetX, event.offsetY);
-    this.ctx.stroke();
+    ctx.lineTo(event.offsetX, event.offsetY);
+    ctx.stroke();
 
-    this.ctx.globalCompositeOperation = originalComposite;
-    this.ctx.strokeStyle = originalStroke;
-    this.ctx.lineWidth = originalWidth;
+    // Restaura
+    ctx.globalCompositeOperation = originalComposite;
+    ctx.strokeStyle = originalStroke;
+    ctx.lineWidth = originalWidth;
 
-    this.updatePreview();
+    this.updatePreview(); // se estiver usando preview
   }
 
   selectTool(tool: Tool) {
@@ -104,6 +119,62 @@ export class AppComponent implements AfterViewInit {
   changeColor(event: Event) {
     const input = event.target as HTMLInputElement;
     this.ctx.strokeStyle = input.value;
+  }
+
+  createLayer(name: string) {
+    const canvas = document.createElement('canvas');
+    canvas.width = this.canvasWidth;
+    canvas.height = this.canvasHeight;
+    canvas.classList.add('absolute-canvas');
+
+    const ctx = canvas.getContext('2d')!;
+    ctx.lineCap = 'round';
+    ctx.lineWidth = this.lineWidth;
+    ctx.strokeStyle = '#000';
+
+    const newLayer: Layer = {
+      id: crypto.randomUUID(),
+      name,
+      visible: true,
+      canvas,
+      ctx,
+    };
+
+    this.layers.push(newLayer);
+    this.activeLayerId = newLayer.id;
+
+    const container = document.querySelector('.my-canva')!;
+    container.appendChild(canvas);
+
+    this.layers.forEach(l => {
+      l.canvas.style.pointerEvents = (l.id === this.activeLayerId) ? 'auto' : 'none';
+    });
+  }
+
+  toggleLayer(id: string) {
+    const layer = this.layers.find(l => l.id === id);
+    if (!layer) return;
+    layer.visible = !layer.visible;
+    layer.canvas.style.display = layer.visible ? 'block' : 'none';
+  }
+
+  removeLayer(id: string) {
+    const index = this.layers.findIndex(l => l.id === id);
+    if (index === -1) return;
+
+    const [layer] = this.layers.splice(index, 1);
+    layer.canvas.remove();
+
+    if (this.activeLayerId === layer.id && this.layers.length > 0) {
+      this.activeLayerId = this.layers[0].id;
+    }
+  }
+
+  setActiveLayer(id: string) {
+    this.activeLayerId = id;
+    this.layers.forEach(layer => {
+      layer.canvas.style.pointerEvents = (layer.id === id) ? 'auto' : 'none';
+    });
   }
 
   resizeCanvas() {
