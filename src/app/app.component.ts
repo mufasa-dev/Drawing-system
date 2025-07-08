@@ -164,6 +164,8 @@ export class AppComponent implements AfterViewInit {
     if (!layer) return;
     layer.visible = !layer.visible;
     layer.canvas.style.display = layer.visible ? 'block' : 'none';
+
+    this.updatePreview();
   }
 
   removeLayer(id: string) {
@@ -176,6 +178,8 @@ export class AppComponent implements AfterViewInit {
     if (this.activeLayerId === layer.id && this.layers.length > 0) {
       this.activeLayerId = this.layers[0].id;
     }
+
+    this.updatePreview();
   }
 
   setActiveLayer(id: string) {
@@ -222,22 +226,24 @@ export class AppComponent implements AfterViewInit {
   }
 
   updatePreview() {
-    if (!this.previewCanvasRef || !this.canva) return;
+    if (!this.previewCanvasRef) return;
 
-    const mainCanvas = this.canva.nativeElement;
     const previewCanvas = this.previewCanvasRef.nativeElement;
     const previewCtx = previewCanvas.getContext('2d');
     if (!previewCtx) return;
 
     previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
 
-    previewCtx.drawImage(
-      mainCanvas,
-      0, 0, mainCanvas.width, mainCanvas.height,
-      0, 0, previewCanvas.width, previewCanvas.height
-    );
-  }
+    this.layers.forEach(layer => {
+      if (!layer.visible) return;
 
+      previewCtx.drawImage(
+        layer.canvas,
+        0, 0, layer.canvas.width, layer.canvas.height,
+        0, 0, previewCanvas.width, previewCanvas.height
+      );
+    });
+  }
 
   saveDrawing() {
     if (!this.ctx || !this.canva) return;
