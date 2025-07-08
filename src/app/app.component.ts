@@ -33,6 +33,7 @@ export class AppComponent implements AfterViewInit {
   public canvasWidth: number = 800;
   public canvasHeight: number = 600;
   public currentColor: string = '#000000';
+  public countLayers: number = 1;
   public Tool = Tool;
 
   public tempDrawName: string = "image";
@@ -53,7 +54,7 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit(): void {
      if (this.isBrowser) {
       setTimeout(() => {
-        this.createLayer('Camada 1');
+        this.createLayer();
       }, 100);
     }
   }
@@ -129,7 +130,7 @@ export class AppComponent implements AfterViewInit {
     layer.ctx.strokeStyle = this.currentColor;
   }
 
-  createLayer(name: string) {
+  createLayer() {
     const canvas = document.createElement('canvas');
     canvas.width = this.canvasWidth;
     canvas.height = this.canvasHeight;
@@ -142,11 +143,12 @@ export class AppComponent implements AfterViewInit {
 
     const newLayer: Layer = {
       id: crypto.randomUUID(),
-      name,
+      name: 'Camada ' + this.countLayers,
       visible: true,
       canvas,
       ctx,
     };
+    this.countLayers++;
 
     this.layers.push(newLayer);
     this.activeLayerId = newLayer.id;
