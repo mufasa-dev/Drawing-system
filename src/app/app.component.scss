@@ -49,9 +49,21 @@
 }
 
 .my-canva {
-  max-width: calc(100% - 400px);
-  max-height: calc(100vh - 100px);
+  width: calc(100% - 400px);
+  height: calc(100vh - 100px);
   overflow: auto;
+  position: relative;
+  background-color: transparent;
+  border-radius: 5px;
+}
+
+::ng-deep .absolute-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+  border: 1px solid black;
 }
 
 .tools-right {
@@ -61,17 +73,26 @@
     background-color: white;
     border-radius: 10px;
     border: 1px solid #444;
+    margin-bottom: 10px;
     & .tbox-tittle {
       background-color: #555;
       border-radius: 5px 5px 0px 0;
       color: white;
       padding: 5px;
+      display: flex;
+      align-items: center;
     }
     & .canvas-preview {
       padding: 5px;
     }
   }
+}
 
+.layer-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px;
 }
 
 #myCanva {
