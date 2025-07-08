@@ -251,9 +251,9 @@ export class AppComponent implements AfterViewInit {
   }
 
   saveDrawing() {
-    if (!this.ctx || !this.canva) return;
+    if (!this.previewCanvasRef) return;
 
-    const canvas = this.canva.nativeElement;
+    const canvas = this.previewCanvasRef.nativeElement;
     const image = canvas.toDataURL('image/png');
 
     const link = document.createElement('a');
