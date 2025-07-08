@@ -47,15 +47,18 @@
     </button>
     <input type="color" (change)="changeColor($event)" />
   </div>
+
   <div class="my-canva p-1" (mousedown)="startDrawing($event)"
       (mousemove)="draw($event)"
       (mouseup)="stopDrawing()"
       (mouseleave)="stopDrawing()">
+      <div class="back-square" [style.width.px]="canvasWidth" [style.height.px]="canvasHeight"></div>
   </div>
+  
   <div class="tools-right">
     <div class="tools-box">
       <div class="tbox-tittle">Preview</div>
-      <div class="canvas-preview">
+      <div class="canvas-preview back-square">
         <canvas #previewCanvas></canvas>
       </div>
     </div>

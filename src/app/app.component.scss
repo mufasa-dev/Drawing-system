@@ -57,6 +57,17 @@
   border-radius: 5px;
 }
 
+.back-square {
+  background-color: #1e1e1e;
+  background-image: 
+    linear-gradient(45deg, #2a2a2a 25%, transparent 25%),
+    linear-gradient(-45deg, #2a2a2a 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #2a2a2a 75%),
+    linear-gradient(-45deg, transparent 75%, #2a2a2a 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
 ::ng-deep .absolute-canvas {
   position: absolute;
   top: 0;
@@ -93,13 +104,11 @@
   align-items: center;
   cursor: pointer;
   padding: 5px;
+  background-color: #333;
+  color: white;
   &.active {
-    background-color: #a3cedf;
+    background-color: #222;
   }
-}
-
-#myCanva {
-    border: 1px solid black;
 }
 
 /* ===== Scrollbar CSS ===== */
