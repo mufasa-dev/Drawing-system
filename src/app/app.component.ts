@@ -32,6 +32,7 @@ export class AppComponent implements AfterViewInit {
   public drawName: string = "image";
   public canvasWidth: number = 800;
   public canvasHeight: number = 600;
+  public currentColor: string = '#000000';
   public Tool = Tool;
 
   public tempDrawName: string = "image";
@@ -51,7 +52,9 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
      if (this.isBrowser) {
-      this.createLayer('Camada 1');
+      setTimeout(() => {
+        this.createLayer('Camada 1');
+      }, 100);
     }
   }
 
@@ -118,7 +121,12 @@ export class AppComponent implements AfterViewInit {
 
   changeColor(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.ctx.strokeStyle = input.value;
+    this.currentColor = input.value;
+
+    const layer = this.layers.find(l => l.id === this.activeLayerId);
+    if (!layer) return;
+
+    layer.ctx.strokeStyle = this.currentColor;
   }
 
   createLayer(name: string) {
@@ -130,7 +138,7 @@ export class AppComponent implements AfterViewInit {
     const ctx = canvas.getContext('2d')!;
     ctx.lineCap = 'round';
     ctx.lineWidth = this.lineWidth;
-    ctx.strokeStyle = '#000';
+    ctx.strokeStyle = this.currentColor;
 
     const newLayer: Layer = {
       id: crypto.randomUUID(),
@@ -174,6 +182,7 @@ export class AppComponent implements AfterViewInit {
     this.activeLayerId = id;
     this.layers.forEach(layer => {
       layer.canvas.style.pointerEvents = (layer.id === id) ? 'auto' : 'none';
+      layer.ctx.strokeStyle = this.currentColor;
     });
   }
 
