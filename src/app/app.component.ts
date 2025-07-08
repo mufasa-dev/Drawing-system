@@ -193,21 +193,24 @@ export class AppComponent implements AfterViewInit {
   }
 
   resizeCanvas() {
-    if (!this.canva) return;
+    this.layers.forEach(layer => {
+      const oldCanvas = layer.canvas;
+      const oldCtx = layer.ctx;
 
-    const canvas = this.canva.nativeElement;
+      const imageData = oldCtx.getImageData(0, 0, oldCanvas.width, oldCanvas.height);
 
-    const imageData = this.ctx.getImageData(0, 0, canvas.width, canvas.height);
+      oldCanvas.width = this.canvasWidth;
+      oldCanvas.height = this.canvasHeight;
 
-    canvas.width = this.canvasWidth;
-    canvas.height = this.canvasHeight;
+      const newCtx = oldCanvas.getContext('2d')!;
+      newCtx.lineCap = 'round';
+      newCtx.lineWidth = this.lineWidth;
+      newCtx.strokeStyle = this.currentColor;
 
-    this.ctx = canvas.getContext('2d')!;
-    this.ctx.lineCap = 'round';
-    this.ctx.lineWidth = this.lineWidth;
-    this.ctx.strokeStyle = '#000';
+      newCtx.putImageData(imageData, 0, 0);
 
-    this.ctx.putImageData(imageData, 0, 0);
+      layer.ctx = newCtx;
+    });
 
     this.updatePreview();
   }
