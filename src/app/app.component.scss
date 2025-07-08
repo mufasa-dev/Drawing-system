@@ -98,3 +98,25 @@
 #myCanva {
     border: 1px solid black;
 }
+
+/* ===== Scrollbar CSS ===== */
+/* Firefox */
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #666666 #333333;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 16px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #333333;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #666666;
+  border-radius: 10px;
+  border: 3px solid #ffffff;
+}
