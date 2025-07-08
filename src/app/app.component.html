@@ -47,17 +47,10 @@
     </button>
     <input type="color" (change)="changeColor($event)" />
   </div>
-  <div class="my-canva p-1">
-    @if (isBrowser) {
-      <canvas #canvas id="myCanva"
-        [attr.width]="canvasWidth"
-        [attr.height]="canvasHeight"
-        (mousedown)="startDrawing($event)"
-        (mousemove)="draw($event)"
-        (mouseup)="stopDrawing()"
-        (mouseleave)="stopDrawing()">
-      </canvas>
-    }
+  <div class="my-canva p-1" (mousedown)="startDrawing($event)"
+      (mousemove)="draw($event)"
+      (mouseup)="stopDrawing()"
+      (mouseleave)="stopDrawing()">
   </div>
   <div class="tools-right">
     <div class="tools-box">
@@ -65,6 +58,30 @@
       <div class="canvas-preview">
         <canvas #previewCanvas></canvas>
       </div>
+    </div>
+
+    <div class="tools-box">
+      <div class="tbox-tittle">
+        Camadas 
+        <button class="btn btn-sm ms-auto" (click)="createLayer('Nova camada')">
+          <fa-icon [icon]="faPlus"></fa-icon>
+        </button>
+      </div>
+      @for (layer of layers; track $index; let i = $index) {
+        <div class="layer-item">
+          <input
+            type="radio"
+            name="layerSelect"
+            [value]="layer.id"
+            [(ngModel)]="activeLayerId"
+          />
+          {{ layer.name }}
+          <button class="btn btn-sm ms-auto" (click)="removeLayer(layer.id)">🗑️</button>
+          <button class="btn btn-sm" (click)="toggleLayer(layer.id)">
+            {{ layer.visible ? '👁️' : '🚫' }}
+          </button>
+        </div>
+      }
     </div>
   </div>
 </div>
