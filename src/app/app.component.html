@@ -68,13 +68,9 @@
         </button>
       </div>
       @for (layer of layers; track $index; let i = $index) {
-        <div class="layer-item">
-          <input
-            type="radio"
-            name="layerSelect"
-            [value]="layer.id"
-            [(ngModel)]="activeLayerId"
-          />
+        <div class="layer-item"
+            [class.active]="layer.id == activeLayerId" 
+            (click)="setActiveLayer(layer.id)" >
           {{ layer.name }}
           <button class="btn btn-sm ms-auto" (click)="removeLayer(layer.id)">🗑️</button>
           <button class="btn btn-sm" (click)="toggleLayer(layer.id)">

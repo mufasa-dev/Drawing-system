@@ -93,6 +93,9 @@
   align-items: center;
   cursor: pointer;
   padding: 5px;
+  &.active {
+    background-color: #a3cedf;
+  }
 }
 
 #myCanva {
