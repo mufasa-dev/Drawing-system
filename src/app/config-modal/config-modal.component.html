@@ -1,5 +1,5 @@
-<div class="modal-header">
-  <h5 class="modal-title">Redimensionar Canvas</h5>
+<div class="modal-header py-2">
+  <h5 class="modal-title">Propriedades</h5>
   <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
 </div>
 <div class="modal-body">
@@ -9,7 +9,7 @@
       <input
         type="text"
         id="drawName"
-        class="form-control"
+        class="form-control form-control-sm"
         [(ngModel)]="tempDrawName"
         name="drawName"
       />
@@ -19,7 +19,7 @@
       <input
         type="number"
         id="canvasWidth"
-        class="form-control"
+        class="form-control form-control-sm"
         [(ngModel)]="tempCanvasWidth"
         name="canvasWidth"
       />
@@ -29,7 +29,7 @@
       <input
         type="number"
         id="canvasHeight"
-        class="form-control"
+        class="form-control form-control-sm"
         [(ngModel)]="tempCanvasHeight"
         name="canvasHeight"
       />
@@ -37,8 +37,8 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-  <button class="btn btn-primary" (click)="applyResize()">
+  <button class="btn btn-sm btn-secondary" (click)="closeModal()">Cancelar</button>
+  <button class="btn btn-sm btn-primary" (click)="applyResize()">
     <fa-icon [icon]="faSave"></fa-icon> Salvar
   </button>
 </div>

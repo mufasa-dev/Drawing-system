@@ -110,8 +110,8 @@
 </ng-template>
 
 <ng-template #resizeModal let-modal>
-  <resize-component [picture]="picture" 
+  <config-component [picture]="picture" 
     (resizeCanvas)="applyResize($event)"
     (close)="modal.dismiss()">
-  </resize-component>
+  </config-component>
 </ng-template>

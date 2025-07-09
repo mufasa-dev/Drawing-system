@@ -8,12 +8,12 @@ import { FormsModule } from '@angular/forms';
 import { Picture } from '../../model/picture.model';
 
 @Component({
-  selector: 'resize-component',
+  selector: 'config-component',
   imports: [ FontAwesomeModule, NgbModule, FormsModule ],
-  templateUrl: './resize-modal.component.html',
+  templateUrl: './config-modal.component.html',
   styleUrl: '../app.component.scss'
 })
-export class ResizeComponent implements AfterViewInit {
+export class ConfigComponent implements AfterViewInit {
 
   @Input() picture = new Picture();
   

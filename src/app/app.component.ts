@@ -8,13 +8,13 @@ import { Tool } from '../enum/tools.enum';
 import { FormsModule } from '@angular/forms';
 import { Layer } from '../model/layer.model';
 import { Picture } from '../model/picture.model';
-import { ResizeComponent } from "./resize-modal/resize-modal.component";
+import { ConfigComponent } from "./config-modal/config-modal.component";
 import { rgbaToHex } from '../utils/color.utils';
 import { NewPictureComponent } from './new-picture/new-picture.component';
 
 @Component({
   selector: 'app-root',
-  imports: [FontAwesomeModule, NgbModule, FormsModule, ResizeComponent, NewPictureComponent],
+  imports: [FontAwesomeModule, NgbModule, FormsModule, ConfigComponent, NewPictureComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
