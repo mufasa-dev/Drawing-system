@@ -4,7 +4,7 @@
       <fa-icon [icon]="faFolder"></fa-icon> Arquivo
     </button>
     <div ngbDropdownMenu>
-      <button class="dropdown-item" (click)="openResizeModal(resizeModal)">
+      <button class="dropdown-item" (click)="openResizeModal(newPictureModal)">
         <fa-icon [icon]="faFile"></fa-icon> Novo
       </button>
 
@@ -102,6 +102,12 @@
   </div>
 </div>
 
+<ng-template #newPictureModal let-modal>
+  <new-picture-component
+    (createNewPicture)="createNewPicture($event)"
+    (close)="modal.dismiss()">
+  </new-picture-component>
+</ng-template>
 
 <ng-template #resizeModal let-modal>
   <resize-component [picture]="picture" 

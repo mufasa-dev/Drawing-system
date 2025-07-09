@@ -10,10 +10,11 @@ import { Layer } from '../model/layer.model';
 import { Picture } from '../model/picture.model';
 import { ResizeComponent } from "./resize-modal/resize-modal.component";
 import { rgbaToHex } from '../utils/color.utils';
+import { NewPictureComponent } from './new-picture/new-picture.component';
 
 @Component({
   selector: 'app-root',
-  imports: [FontAwesomeModule, NgbModule, FormsModule, ResizeComponent],
+  imports: [FontAwesomeModule, NgbModule, FormsModule, ResizeComponent, NewPictureComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -132,6 +133,46 @@ export class AppComponent implements AfterViewInit {
     if (!layer) return;
 
     layer.ctx.strokeStyle = this.currentColor;
+  }
+
+  createNewPicture(picture: Picture) {
+    this.picture = { ...picture };
+
+    this.layers.forEach(layer => layer.canvas.remove());
+    this.layers = [];
+
+    const container = document.querySelector('.my-canva') as HTMLElement;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = picture.width;
+    canvas.height = picture.height;
+    canvas.classList.add('absolute-canvas');
+
+    const ctx = canvas.getContext('2d')!;
+
+    if (picture.background === 'white') {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    ctx.lineCap = 'round';
+    ctx.lineWidth = this.lineWidth;
+    ctx.strokeStyle = this.currentColor;
+
+    container.appendChild(canvas);
+
+    const newLayer = {
+      id: crypto.randomUUID(),
+      name: picture.name || 'Camada 1',
+      canvas,
+      ctx,
+      visible: true
+    };
+
+    this.layers.push(newLayer);
+    this.activeLayerId = newLayer.id;
+
+    this.updatePreview();
   }
 
   createLayer() {
@@ -270,11 +311,11 @@ export class AppComponent implements AfterViewInit {
     if (!this.previewCanvasRef) return;
 
     const canvas = this.previewCanvasRef.nativeElement;
-    const image = canvas.toDataURL('image/' + this.picture.extension);
+    const image = canvas.toDataURL('image/' + this.picture.format);
 
     const link = document.createElement('a');
     link.href = image;
-    link.download = this.picture.name + '.' + this.picture.extension;
+    link.download = this.picture.name + '.' + this.picture.format;
     link.click();
   }
 
@@ -293,8 +334,8 @@ export class AppComponent implements AfterViewInit {
         this.picture.width = img.width;
         this.picture.height = img.height;
 
-        let extension = file.name.split('.').pop()?.toLowerCase();
-        if (extension) this.picture.extension = extension;
+        let format = file.name.split('.').pop()?.toLowerCase();
+        if (format) this.picture.format = format;
 
         const container = document.querySelector('.my-canva') as HTMLElement;
 
