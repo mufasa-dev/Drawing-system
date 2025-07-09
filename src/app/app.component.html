@@ -1,21 +1,32 @@
 <div class="top-menu">
-  <button class="btn btn-opt" (click)="saveDrawing()" [ngbTooltip]="'Salvar'">
-    <fa-icon [icon]="faSave"></fa-icon>
-  </button>
+  <div ngbDropdown class="dropdown me-2">
+    <button class="btn btn-opt btn-sm dropdown-toggle" ngbDropdownToggle>
+      <fa-icon [icon]="faFolder"></fa-icon> Arquivo
+    </button>
+    <div ngbDropdownMenu>
+      <button class="dropdown-item" (click)="openResizeModal(resizeModal)">
+        <fa-icon [icon]="faFile"></fa-icon> Novo
+      </button>
 
-  <label class="btn btn-opt ms-1" [ngbTooltip]="'Enviar imagem'">
-    <fa-icon [icon]="faUpload"></fa-icon>
-    <input
-      type="file"
-      accept="image/*"
-      (change)="handleImageUpload($event)"
-      hidden
-    />
-  </label>
+      <label class="dropdown-item">
+        <fa-icon [icon]="faUpload"></fa-icon> Abrir
+        <input
+          type="file"
+          accept="image/*"
+          (change)="handleImageUpload($event)"
+          hidden
+        />
+      </label>
 
-  <button class="btn btn-opt ms-1" (click)="openResizeModal(resizeModal)" [ngbTooltip]="'Opções'">
-    <fa-icon [icon]="faCogs"></fa-icon>
-  </button>
+      <button class="dropdown-item" (click)="saveDrawing()">
+        <fa-icon [icon]="faSave"></fa-icon> Salvar
+      </button>
+
+      <button class="dropdown-item" (click)="openResizeModal(resizeModal)">
+        <fa-icon [icon]="faCogs"></fa-icon> Propriedades
+      </button>
+    </div>
+  </div>
 
   <div class="container-slider-tools">
     <label class="form-label me-2 mb-0">Tamanho:</label>

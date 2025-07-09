@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faCogs, faEraser, faEyeDropper, faPencil, faPlus, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCogs, faEraser, faEyeDropper, faFile, faFolder, faPencil, faPlus, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
@@ -44,6 +44,9 @@ export class AppComponent implements AfterViewInit {
   public faCogs = faCogs;
   public faPlus = faPlus;
   public faEyeDropper = faEyeDropper;
+  public faFile = faFile;
+  public faBars = faBars;
+  public faFolder = faFolder;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private modalService: NgbModal) {
     this.isBrowser = isPlatformBrowser(this.platformId);
