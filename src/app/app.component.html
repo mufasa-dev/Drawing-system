@@ -34,18 +34,24 @@
 <div class="container-draw">
   <div class="container-tools p-1">
     <button class="btn btn-tool" 
-      [class.active]="tool === 'pencil'"
+      [class.active]="tool === Tool.Pencil"
       [ngbTooltip]="'Pincel'" 
       (click)="selectTool(Tool.Pencil)">
       <fa-icon [icon]="faPencil"></fa-icon>
     </button>
     <button class="btn btn-tool" 
-      [class.active]="tool === 'eraser'"
+      [class.active]="tool === Tool.Eraser"
       [ngbTooltip]="'Borracha'" 
       (click)="selectTool(Tool.Eraser)">
       <fa-icon [icon]="faEraser"></fa-icon>
     </button>
-    <input type="color" (change)="changeColor($event)" />
+    <button class="btn btn-tool"
+      [class.active]="tool === Tool.Eyedropper" 
+      [ngbTooltip]="'Conta-gotas'" 
+      (click)="selectTool(Tool.Eyedropper)">
+      <fa-icon [icon]="faEyeDropper"></fa-icon>
+    </button>
+    <input type="color" [(ngModel)]="currentColor" (change)="changeColor($event)" />
   </div>
 
   <div class="my-canva p-1" (mousedown)="startDrawing($event)"

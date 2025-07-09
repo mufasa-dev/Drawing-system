@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faCogs, faEraser, faPencil, faPlus, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faCogs, faEraser, faEyeDropper, faPencil, faPlus, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { Layer } from '../model/layer.model';
 import { Picture } from '../model/picture.model';
 import { ResizeComponent } from "./resize-modal/resize-modal.component";
+import { rgbaToHex } from '../utils/color.utils';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +43,7 @@ export class AppComponent implements AfterViewInit {
   public faUpload = faUpload;
   public faCogs = faCogs;
   public faPlus = faPlus;
+  public faEyeDropper = faEyeDropper;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private modalService: NgbModal) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -69,6 +71,11 @@ export class AppComponent implements AfterViewInit {
   startDrawing(event: MouseEvent) {
     const layer = this.layers.find(l => l.id === this.activeLayerId);
     if (!layer) return;
+
+    if (this.tool === Tool.Eyedropper) {
+      this.pickColorFromCanvas(event.offsetX, event.offsetY, layer.ctx);
+      return;
+    }
 
     this.drawing = true;
 
@@ -117,7 +124,6 @@ export class AppComponent implements AfterViewInit {
 
   changeColor(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.currentColor = input.value;
 
     const layer = this.layers.find(l => l.id === this.activeLayerId);
     if (!layer) return;
@@ -185,6 +191,22 @@ export class AppComponent implements AfterViewInit {
       layer.canvas.style.pointerEvents = (layer.id === id) ? 'auto' : 'none';
       layer.ctx.strokeStyle = this.currentColor;
     });
+  }
+
+  pickColorFromCanvas(x: number, y: number, ctx: CanvasRenderingContext2D) {
+    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    const [r, g, b, a] = pixel;
+
+    const color = rgbaToHex(r, g,b);
+
+    this.currentColor = color;
+
+    const active = this.layers.find(l => l.id === this.activeLayerId);
+    if (active) {
+      active.ctx.strokeStyle = color;
+    }
+
+    this.tool = Tool.Pencil;
   }
 
   resizeCanvas() {
