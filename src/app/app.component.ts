@@ -7,10 +7,12 @@ import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
 import { FormsModule } from '@angular/forms';
 import { Layer } from '../model/layer.model';
+import { Picture } from '../model/picture.model';
+import { ResizeComponent } from "./resize-modal/resize-modal.component";
 
 @Component({
   selector: 'app-root',
-  imports: [ FontAwesomeModule, NgbModule, FormsModule ],
+  imports: [FontAwesomeModule, NgbModule, FormsModule, ResizeComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -21,6 +23,7 @@ export class AppComponent implements AfterViewInit {
 
   public tool: Tool = Tool.Pencil;
 
+  public picture: Picture = new Picture();
   private drawing: boolean = false;
   public ctx!: CanvasRenderingContext2D;
   public isBrowser: boolean = false;
@@ -29,16 +32,9 @@ export class AppComponent implements AfterViewInit {
   public lineWidth: number = 5;
   public layers: Layer[] = [];
   public activeLayerId: string = '';
-  public drawName: string = "image";
-  public canvasWidth: number = 800;
-  public canvasHeight: number = 600;
   public currentColor: string = '#000000';
   public countLayers: number = 1;
   public Tool = Tool;
-
-  public tempDrawName: string = "image";
-  public tempCanvasWidth: number = 800;
-  public tempCanvasHeight: number = 600;
 
   public faPencil = faPencil;
   public faEraser = faEraser;
@@ -108,12 +104,11 @@ export class AppComponent implements AfterViewInit {
     ctx.lineTo(event.offsetX, event.offsetY);
     ctx.stroke();
 
-    // Restaura
     ctx.globalCompositeOperation = originalComposite;
     ctx.strokeStyle = originalStroke;
     ctx.lineWidth = originalWidth;
 
-    this.updatePreview(); // se estiver usando preview
+    this.updatePreview();
   }
 
   selectTool(tool: Tool) {
@@ -132,8 +127,8 @@ export class AppComponent implements AfterViewInit {
 
   createLayer() {
     const canvas = document.createElement('canvas');
-    canvas.width = this.canvasWidth;
-    canvas.height = this.canvasHeight;
+    canvas.width = this.picture.width;
+    canvas.height = this.picture.height;
     canvas.classList.add('absolute-canvas');
 
     const ctx = canvas.getContext('2d')!;
@@ -199,8 +194,8 @@ export class AppComponent implements AfterViewInit {
 
       const imageData = oldCtx.getImageData(0, 0, oldCanvas.width, oldCanvas.height);
 
-      oldCanvas.width = this.canvasWidth;
-      oldCanvas.height = this.canvasHeight;
+      oldCanvas.width = this.picture.width;
+      oldCanvas.height = this.picture.height;
 
       const newCtx = oldCanvas.getContext('2d')!;
       newCtx.lineCap = 'round';
@@ -215,18 +210,14 @@ export class AppComponent implements AfterViewInit {
     this.updatePreview();
   }
 
-  applyResize(modal: any) {
-    this.drawName = this.tempDrawName;
-    this.canvasHeight = this.tempCanvasHeight;
-    this.canvasWidth = this.tempCanvasWidth;
+  applyResize(picture: Picture) {
+    this.picture.name = picture.name;
+    this.picture.width = picture.width;
+    this.picture.height = picture.height;
     this.resizeCanvas();
-    modal.close();
   }
 
   openResizeModal(content: any) {
-    this.tempCanvasHeight = this.canvasHeight;
-    this.tempCanvasWidth = this.canvasWidth;
-    this.tempDrawName = this.drawName
     this.modalService.open(content, { centered: true });
   }
 
@@ -258,7 +249,7 @@ export class AppComponent implements AfterViewInit {
 
     const link = document.createElement('a');
     link.href = image;
-    link.download = this.drawName + '.png';
+    link.download = this.picture.name + '.png';
     link.click();
   }
 
@@ -273,8 +264,8 @@ export class AppComponent implements AfterViewInit {
       const img = new Image();
       img.onload = () => {
         // 🔁 Redimensiona o canvas ANTES de desenhar
-        this.canvasWidth = img.width;
-        this.canvasHeight = img.height;
+        this.picture.width = img.width;
+        this.picture.height = img.height;
 
         const canvas = this.canva.nativeElement;
 
