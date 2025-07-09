@@ -245,16 +245,16 @@ export class AppComponent implements AfterViewInit {
     if (!this.previewCanvasRef) return;
 
     const canvas = this.previewCanvasRef.nativeElement;
-    const image = canvas.toDataURL('image/png');
+    const image = canvas.toDataURL('image/' + this.picture.extension);
 
     const link = document.createElement('a');
     link.href = image;
-    link.download = this.picture.name + '.png';
+    link.download = this.picture.name + '.' + this.picture.extension;
     link.click();
   }
 
   handleImageUpload(event: Event) {
-     const input = event.target as HTMLInputElement;
+    const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
 
     const file = input.files[0];
@@ -262,32 +262,50 @@ export class AppComponent implements AfterViewInit {
 
     reader.onload = (e) => {
       const img = new Image();
+
       img.onload = () => {
-        // 🔁 Redimensiona o canvas ANTES de desenhar
+        this.picture.name = file.name.replace(/\.[^/.]+$/, '');
         this.picture.width = img.width;
         this.picture.height = img.height;
 
-        const canvas = this.canva.nativeElement;
+        let extension = file.name.split('.').pop()?.toLowerCase();
+        if (extension) this.picture.extension = extension;
 
-        // Redimensiona o elemento
+        const container = document.querySelector('.my-canva') as HTMLElement;
+
+        this.layers.forEach(layer => layer.canvas.remove());
+        this.layers = [];
+
+        const layerId = crypto.randomUUID();
+        const canvas = document.createElement('canvas');
         canvas.width = img.width;
         canvas.height = img.height;
+        canvas.classList.add('absolute-canvas');
 
-        // Recria contexto
-        this.ctx = canvas.getContext('2d')!;
-        this.ctx.lineCap = 'round';
-        this.ctx.lineWidth = this.lineWidth;
-        this.ctx.strokeStyle = '#000';
+        const ctx = canvas.getContext('2d')!;
+        ctx.drawImage(img, 0, 0);
+        ctx.lineCap = 'round';
+        ctx.lineWidth = this.lineWidth;
+        ctx.strokeStyle = this.currentColor;
 
-        // ✅ Agora é seguro desenhar a imagem
-        this.ctx.drawImage(img, 0, 0);
+        container.appendChild(canvas);
+
+        this.layers.push({
+          id: layerId,
+          name: this.picture.name,
+          canvas,
+          ctx,
+          visible: true
+        });
+
+        this.activeLayerId = layerId;
+
+        this.updatePreview();
       };
+
       img.src = e.target?.result as string;
     };
-
     reader.readAsDataURL(file);
-
-    this.updatePreview();
   }
 
 }

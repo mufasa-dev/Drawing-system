@@ -47,6 +47,7 @@ export class ResizeComponent implements AfterViewInit {
   applyResize() {
     let picture: Picture = {
       name: this.tempDrawName,
+      extension: this.picture.extension,
       width: this.tempCanvasWidth,
       height: this.tempCanvasHeight
     };
