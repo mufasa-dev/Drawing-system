@@ -72,6 +72,12 @@
     />
     <span class="ms-1">{{ tolerance }} px</span>
   </div>
+  <div class="container-slider-tools" *ngIf="tool == Tool.Zoom">
+    <select class="form-select form-select-sm" [(ngModel)]="zoomType">
+      <option value="in">Zoom In</option>
+      <option value="out">Zoom Out</option>
+    </select>
+  </div>
 </div>
 
 <div class="footer-menu">
@@ -144,8 +150,8 @@
     <div
       class="brush-preview"
       [ngStyle]="{
-        width: lineWidth + 'px',
-        height: lineWidth + 'px',
+        width: (lineWidth * zoom) + 'px',
+        height: (lineWidth * zoom) + 'px',
         top: cursorY + 'px',
         left: cursorX + 'px',
         display: useCursorBrush() ? 'block' : 'none',

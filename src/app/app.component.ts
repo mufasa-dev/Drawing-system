@@ -37,6 +37,7 @@ export class AppComponent implements AfterViewInit {
   public tolerance: number = 30;
   public zoom: number = 1;
   public zoomStep: number = 0.1;
+  public zoomType: 'in' | 'out' = 'in';
   public layers: Layer[] = [];
   public activeLayerId: string = '';
   public currentColor: string = '#000000';
@@ -98,9 +99,11 @@ export class AppComponent implements AfterViewInit {
     if (this.tool == Tool.Zoom) {
       event.preventDefault();
       if (event.button === 2) {
-        this.zoomOut(event.offsetX, event.offsetY);
+        if (this.zoomType == 'in') this.zoomOut(event.offsetX, event.offsetY);
+        if (this.zoomType == 'out') this.zoomIn(event.offsetX, event.offsetY);
       } else {
-        this.zoonIn(event.offsetX, event.offsetY);
+        if (this.zoomType == 'in') this.zoomIn(event.offsetX, event.offsetY);
+        if (this.zoomType == 'out') this.zoomOut(event.offsetX, event.offsetY);
       }
       return;
     }
@@ -117,7 +120,7 @@ export class AppComponent implements AfterViewInit {
     this.drawing = false;
   }
 
-  zoonIn(x: number, y: number) {
+  zoomIn(x: number, y: number) {
     const factor = 1 + this.zoomStep;
     this.zoomAt(x, y, factor);
   }
@@ -524,7 +527,8 @@ export class AppComponent implements AfterViewInit {
 
   getToolCursor(): string {
     if (this.useCursorBrush()) return 'none';
-    if (this.tool == Tool.Zoom) return 'zoom-in';
+    if (this.tool == Tool.Zoom && this.zoomType == 'in') return 'zoom-in';
+    if (this.tool == Tool.Zoom && this.zoomType == 'out') return 'zoom-out';
     return 'default';
   }
 
