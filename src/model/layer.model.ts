@@ -1,7 +1,7 @@
-export interface Layer {
-  id: string;
-  name: string;
-  visible: boolean;
-  canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
+export class Layer {
+  id: string = "";
+  name: string = "";
+  visible: boolean = true;
+  canvas!: HTMLCanvasElement;
+  ctx!: CanvasRenderingContext2D;
 }

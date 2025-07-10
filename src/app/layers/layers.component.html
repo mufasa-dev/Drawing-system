@@ -12,7 +12,7 @@
       <button class="btn btn-sm" (click)="toggleLayer(layer.id)">
         <fa-icon [icon]="layer.visible ? faEye : faBan"></fa-icon>
       </button>
-      {{ layer.name }}
+      <div (dblclick)="openModal(optLayerModal, layer)">{{ layer.name }}</div>
     </div>
   }
   <div class="tbox-footer">
@@ -21,3 +21,30 @@
       </button>
   </div>
 </div>
+
+<ng-template #optLayerModal let-modal>
+  <div class="modal-header py-2">
+    <h5 class="modal-title">Propriedades</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismess()"></button>
+  </div>
+  <div class="modal-body">
+    <form class="d-flex flex-column gap-3">
+      <div class="form-group">
+        <label for="canvasWidth">Nome:</label>
+        <input
+          type="text"
+          id="drawName"
+          class="form-control form-control-sm"
+          [(ngModel)]="newName"
+          name="drawName"
+        />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-sm btn-secondary" (click)="modal.dismiss()">Cancelar</button>
+    <button class="btn btn-sm btn-primary" (click)="changeLayerOpts(); modal.dismiss()">
+      <fa-icon [icon]="faSave"></fa-icon> Salvar
+    </button>
+  </div>
+</ng-template>

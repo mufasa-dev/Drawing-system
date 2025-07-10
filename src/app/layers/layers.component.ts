@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Layer } from '../../model/layer.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-import { faBan, faEye, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faEye, faPlus, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-layer-panel',
@@ -20,10 +20,18 @@ export class LayersComponent {
   @Output() onToggleLayer = new EventEmitter<string>();
   @Output() onSetActiveLayer = new EventEmitter<string>();
 
+  public selectedLayer: Layer  = new Layer();
+  public newName: string = "";
+
   public faPlus = faPlus;
   public faEye = faEye;
   public faBan = faBan;
   public faTrash = faTrash;
+  public faSave = faSave;
+
+  constructor(private modalService: NgbModal) {
+    
+  }
 
   createLayer() {
     this.onCreateLayer.emit();
@@ -39,5 +47,15 @@ export class LayersComponent {
 
   setActiveLayer(id: string) {
     this.onSetActiveLayer.emit(id);
+  }
+
+  openModal(content: any, layer: Layer) {
+    this.selectedLayer = layer;
+    this.newName = layer.name;
+    this.modalService.open(content, { centered: true });
+  }
+
+  changeLayerOpts() {
+    this.selectedLayer.name = this.newName;
   }
 }
