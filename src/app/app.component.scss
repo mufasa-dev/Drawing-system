@@ -38,13 +38,14 @@
 .btn-tool {
   cursor: pointer;
   margin-bottom: 5px;
-  background-color: white;
-  border: 1px solid #ccc;
+  background-color: #222;
+  border: 1px solid #444;
+  color: white;
   &:hover {
-    background-color: #a3cedf;
+    background-color: #333;
   }
   &.active {
-    background-color: #a3cedf;
+    background-color: #444;
   }
 }
 
