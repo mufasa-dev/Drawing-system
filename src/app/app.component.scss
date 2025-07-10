@@ -2,9 +2,26 @@
     display: flex;
     align-items: center;
     background-color: #555;
+    border-bottom: 1px solid #444;
     color: white;
     width: 100%;
-    padding: 5px 10px;
+    padding: 0px 10px;
+}
+
+.top-tools {
+  display: flex;
+  align-items: center;
+  background-color: #444;
+  border-bottom: 1px solid #222;
+  color: white;
+  width: 100%;
+  padding: 5px 15px;
+  & .tool-descri {
+    border-right: 1px solid white;
+    padding-right: 10px;
+    margin-right: 10px;
+    & b { margin-left: 5px; }
+  }
 }
 
 .container-draw {
@@ -20,7 +37,6 @@
 }
 
 .container-slider-tools {
-  margin-left: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,10 +44,11 @@
 
 .btn-opt {
   cursor: pointer;
-  border: 1px solid #333;
+  border: 0;
+  border-radius: 0;
   color: white;
   &:hover {
-    background-color: #a3cedf;
+    background-color: #333;
   }
 }
 

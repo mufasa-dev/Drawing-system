@@ -27,8 +27,22 @@
       </button>
     </div>
   </div>
+</div>
 
-  <div class="container-slider-tools">
+<div class="top-tools">
+  <div class="tool-descri">
+    @if (tool == Tool.Pencil) {
+      <fa-icon [icon]="faPencil"></fa-icon>
+      <b>Pincel</b>
+    } @else if (tool == Tool.Eraser) {
+      <fa-icon [icon]="faEraser"></fa-icon>
+      <b>Borracha</b>
+    } @else if (tool == Tool.Eyedropper) {
+      <fa-icon [icon]="faEyeDropper"></fa-icon>
+      <b>Conta-gotas</b>
+    }
+  </div>
+  <div class="container-slider-tools" *ngIf="tool == Tool.Pencil || tool == Tool.Eraser">
     <label class="form-label me-2 mb-0">Tamanho:</label>
     <input
       type="range"
@@ -47,18 +61,21 @@
     <button class="btn btn-tool" 
       [class.active]="tool === Tool.Pencil"
       [ngbTooltip]="'Pincel'" 
+      placement="end"
       (click)="selectTool(Tool.Pencil)">
       <fa-icon [icon]="faPencil"></fa-icon>
     </button>
     <button class="btn btn-tool" 
       [class.active]="tool === Tool.Eraser"
       [ngbTooltip]="'Borracha'" 
+      placement="end"
       (click)="selectTool(Tool.Eraser)">
       <fa-icon [icon]="faEraser"></fa-icon>
     </button>
     <button class="btn btn-tool"
       [class.active]="tool === Tool.Eyedropper" 
       [ngbTooltip]="'Conta-gotas'" 
+      placement="end"
       (click)="selectTool(Tool.Eyedropper)">
       <fa-icon [icon]="faEyeDropper"></fa-icon>
     </button>
