@@ -57,6 +57,18 @@
     />
     <span class="ms-1">{{ lineWidth }} px</span>
   </div>
+  <div class="container-slider-tools" *ngIf="tool == Tool.Bucket">
+    <label class="form-label me-2 mb-0">Tolerância:</label>
+    <input
+      type="range"
+      min="1"
+      max="50"
+      [(ngModel)]="tolerance"
+      class="form-range"
+      style="width: 150px;"
+    />
+    <span class="ms-1">{{ tolerance }} px</span>
+  </div>
 </div>
 
 <div class="container-draw">

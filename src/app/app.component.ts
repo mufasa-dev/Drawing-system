@@ -34,6 +34,7 @@ export class AppComponent implements AfterViewInit {
   public cursorX: number = 0;
   public cursorY: number = 0;
   public lineWidth: number = 5;
+  public tolerance: number = 30;
   public layers: Layer[] = [];
   public activeLayerId: string = '';
   public currentColor: string = '#000000';
@@ -294,13 +295,12 @@ export class AppComponent implements AfterViewInit {
     this.tool = Tool.Pencil;
   }
 
-  floodFill(imageData: ImageData, x: number, y: number, fillColorHex: string) {
+  floodFill(imageData: ImageData, x: number, y: number, fillHex: string) {
     const { data, width, height } = imageData;
-
     const index = (x: number, y: number) => (y * width + x) * 4;
 
-    const [rF, gF, bF] = hexToRgb(fillColorHex);
-    const stack = [[x, y]];
+    const [rF, gF, bF] = hexToRgb(fillHex);
+    const stack: [number, number][] = [[x, y]];
 
     const startIdx = index(x, y);
     const targetColor = [
@@ -310,11 +310,15 @@ export class AppComponent implements AfterViewInit {
       data[startIdx + 3]
     ];
 
-    const matchColor = (i: number) =>
-      data[i] === targetColor[0] &&
-      data[i + 1] === targetColor[1] &&
-      data[i + 2] === targetColor[2] &&
-      data[i + 3] === targetColor[3];
+    const matchColor = (i: number): boolean => {
+      const dr = data[i] - targetColor[0];
+      const dg = data[i + 1] - targetColor[1];
+      const db = data[i + 2] - targetColor[2];
+      const da = data[i + 3] - targetColor[3];
+
+      const distance = Math.sqrt(dr * dr + dg * dg + db * db + da * da);
+      return distance <= this.tolerance;
+    };
 
     const setColor = (i: number) => {
       data[i] = rF;
@@ -323,13 +327,17 @@ export class AppComponent implements AfterViewInit {
       data[i + 3] = 255;
     };
 
-    while (stack.length) {
+    const visited = new Uint8Array(width * height);
+
+    while (stack.length > 0) {
       const [cx, cy] = stack.pop()!;
       const i = index(cx, cy);
+      const pixelIdx = cy * width + cx;
 
-      if (!matchColor(i)) continue;
+      if (visited[pixelIdx] || !matchColor(i)) continue;
 
       setColor(i);
+      visited[pixelIdx] = 1;
 
       if (cx > 0) stack.push([cx - 1, cy]);
       if (cx < width - 1) stack.push([cx + 1, cy]);
@@ -337,7 +345,6 @@ export class AppComponent implements AfterViewInit {
       if (cy < height - 1) stack.push([cx, cy + 1]);
     }
   }
-
 
   resizeCanvas() {
     this.layers.forEach(layer => {
