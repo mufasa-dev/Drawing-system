@@ -71,6 +71,21 @@
   </div>
 </div>
 
+<div class="footer-menu">
+  <div class="container-slider-tools ms-auto">
+    <label class="form-label me-2 mb-0">Zoom: </label>
+    <input
+      type="range"
+      min="1"
+      max="200"
+      [(ngModel)]="zoom"
+      class="form-range"
+      style="width: 150px;"
+    />
+    <span class="ms-1">{{ zoom }}%</span>
+  </div>
+</div>
+
 <div class="container-draw">
   <div class="container-tools p-1">
     <button class="btn btn-tool" 

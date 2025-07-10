@@ -24,6 +24,20 @@
   }
 }
 
+.footer-menu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  background-color: #444;
+  border-top: 1px solid #222;
+  color: white;
+  width: 100%;
+  padding: 5px 15px;
+}
+
 .container-draw {
     display: flex;
     width: 100%;

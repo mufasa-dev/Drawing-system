@@ -35,6 +35,7 @@ export class AppComponent implements AfterViewInit {
   public cursorY: number = 0;
   public lineWidth: number = 5;
   public tolerance: number = 30;
+  public zoom: number = 100;
   public layers: Layer[] = [];
   public activeLayerId: string = '';
   public currentColor: string = '#000000';
