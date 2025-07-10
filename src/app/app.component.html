@@ -65,12 +65,24 @@
     <input type="color" [(ngModel)]="currentColor" (change)="changeColor($event)" />
   </div>
 
-  <div class="my-canva p-1" (mousedown)="startDrawing($event)"
-      (mousemove)="draw($event)"
-      (mouseup)="stopDrawing()"
-      (mouseleave)="stopDrawing()">
-      <div class="back-square" [style.width.px]="picture.width" [style.height.px]="picture.height"></div>
+  <div #canvasContainer class="my-canva p-1" (mousedown)="startDrawing($event)"
+    (mousemove)="draw($event); updateCursor($event)"
+    (mouseup)="stopDrawing()"
+    (mouseleave)="stopDrawing(); hideCursor()">
+    <div class="back-square" [style.width.px]="picture.width" [style.height.px]="picture.height"></div>
   </div>
+
+  <div
+    class="brush-preview"
+    [ngStyle]="{
+      width: lineWidth + 'px',
+      height: lineWidth + 'px',
+      top: cursorY + 'px',
+      left: cursorX + 'px',
+      display: tool === Tool.Pencil || tool === Tool.Eraser ? 'block' : 'none',
+      borderColor: tool === Tool.Eraser ? '#f00' : '#fff'
+    }"
+  ></div>
   
   <div class="tools-right">
     <div class="tools-box">

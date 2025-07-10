@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angula
 import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { faBars, faCogs, faEraser, faEyeDropper, faFile, faFolder, faPencil, faPlus, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { NewPictureComponent } from './new-picture/new-picture.component';
 
 @Component({
   selector: 'app-root',
-  imports: [FontAwesomeModule, NgbModule, FormsModule, ConfigComponent, NewPictureComponent],
+  imports: [CommonModule, FontAwesomeModule, NgbModule, FormsModule, ConfigComponent, NewPictureComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -22,6 +22,7 @@ export class AppComponent implements AfterViewInit {
 
   @ViewChild('canvas', { static: false }) canva!: ElementRef<HTMLCanvasElement>;
   @ViewChild('previewCanvas', { static: false }) previewCanvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvasContainer', { static: true }) canvasContainerRef!: ElementRef<HTMLDivElement>;
 
   public tool: Tool = Tool.Pencil;
 
@@ -29,8 +30,9 @@ export class AppComponent implements AfterViewInit {
   private drawing: boolean = false;
   public ctx!: CanvasRenderingContext2D;
   public isBrowser: boolean = false;
-  public lastX: number = 0;
-  public lastY: number = 0;
+  public showBrush = false;
+  public cursorX: number = 0;
+  public cursorY: number = 0;
   public lineWidth: number = 5;
   public layers: Layer[] = [];
   public activeLayerId: string = '';
@@ -120,6 +122,19 @@ export class AppComponent implements AfterViewInit {
     ctx.lineWidth = originalWidth;
 
     this.updatePreview();
+  }
+
+  updateCursor(event: MouseEvent) {
+    const canvasContainer = this.canvasContainerRef.nativeElement;
+    const rect = canvasContainer.getBoundingClientRect();
+
+    this.cursorX = event.clientX - rect.left;
+    this.cursorY = event.clientY - rect.top;
+  }
+
+  hideCursor() {
+    this.cursorX = -9999;
+    this.cursorY = -9999;
   }
 
   selectTool(tool: Tool) {
