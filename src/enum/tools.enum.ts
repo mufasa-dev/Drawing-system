@@ -2,5 +2,6 @@ export enum Tool {
   Pencil = 'pencil',
   Eraser = 'eraser',
   Eyedropper = 'eyedropper',
-  Bucket = 'bucket'
+  Bucket = 'bucket',
+  Zoom = 'zoom'
 }

@@ -43,6 +43,9 @@
     } @else if (tool == Tool.Bucket) {
       <fa-icon [icon]="faBucket"></fa-icon>
       <b>Balde de tinta</b>
+    } @else if (tool == Tool.Zoom) {
+      <fa-icon [icon]="faSearch"></fa-icon>
+      <b>Zoom</b>
     }
   </div>
   <div class="container-slider-tools" *ngIf="useCursorBrush()">
@@ -76,13 +79,15 @@
     <label class="form-label me-2 mb-0">Zoom: </label>
     <input
       type="range"
-      min="1"
-      max="200"
+      min="0.1"
+      max="4"
+      step="0.1"
       [(ngModel)]="zoom"
       class="form-range"
       style="width: 150px;"
+      (ngModelChange)="updateCanvasTransforms()"
     />
-    <span class="ms-1">{{ zoom }}%</span>
+    <span class="ms-1">{{ (zoom * 100) | number: '1.0-0' }}%</span>
   </div>
 </div>
 
@@ -116,6 +121,13 @@
       (click)="selectTool(Tool.Eyedropper)">
       <fa-icon [icon]="faEyeDropper"></fa-icon>
     </button>
+    <button class="btn btn-tool"
+      [class.active]="tool === Tool.Zoom" 
+      [ngbTooltip]="'Zoom'" 
+      placement="end"
+      (click)="selectTool(Tool.Zoom)">
+      <fa-icon [icon]="faSearch"></fa-icon>
+    </button>
     <input type="color" [(ngModel)]="currentColor" (change)="changeColor($event)" />
   </div>
 
@@ -124,7 +136,8 @@
       (mousemove)="draw($event); updateCursor($event)"
       (mouseup)="stopDrawing()"
       (mouseleave)="stopDrawing(); hideCursor()"
-      [style.cursor]="useCursorBrush() ? 'none' : 'default'">
+      (contextmenu)="callContextMenu($event)"
+      [style.cursor]="getToolCursor()">
       <div class="back-square" [style.width.px]="picture.width" [style.height.px]="picture.height"></div>
     </div>
   

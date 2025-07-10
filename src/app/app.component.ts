@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faBars, faBucket, faCogs, faEraser, faEyeDropper, faFile, faFolder, faPencil, faPlus, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faBucket, faCogs, faEraser, faEyeDropper, faFile, faFolder, faPencil, faPlus, faSave, faSearch, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
@@ -35,11 +35,14 @@ export class AppComponent implements AfterViewInit {
   public cursorY: number = 0;
   public lineWidth: number = 5;
   public tolerance: number = 30;
-  public zoom: number = 100;
+  public zoom: number = 1;
+  public zoomStep: number = 0.1;
   public layers: Layer[] = [];
   public activeLayerId: string = '';
   public currentColor: string = '#000000';
   public countLayers: number = 1;
+  public transformX = 0;
+  public transformY = 0;
   public Tool = Tool;
 
   public faPencil = faPencil;
@@ -53,6 +56,7 @@ export class AppComponent implements AfterViewInit {
   public faBars = faBars;
   public faFolder = faFolder;
   public faBucket =  faBucket;
+  public faSearch = faSearch;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private modalService: NgbModal) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -91,6 +95,16 @@ export class AppComponent implements AfterViewInit {
       return;
     }
 
+    if (this.tool == Tool.Zoom) {
+      event.preventDefault();
+      if (event.button === 2) {
+        this.zoomOut(event.offsetX, event.offsetY);
+      } else {
+        this.zoonIn(event.offsetX, event.offsetY);
+      }
+      return;
+    }
+
     this.drawing = true;
 
     const ctx = layer.ctx;
@@ -101,6 +115,16 @@ export class AppComponent implements AfterViewInit {
 
   stopDrawing() {
     this.drawing = false;
+  }
+
+  zoonIn(x: number, y: number) {
+    const factor = 1 + this.zoomStep;
+    this.zoomAt(x, y, factor);
+  }
+
+  zoomOut(x: number, y: number) {
+    const factor = 1 - this.zoomStep
+    this.zoomAt(x, y, factor);
   }
 
   draw(event: MouseEvent) {
@@ -216,6 +240,32 @@ export class AppComponent implements AfterViewInit {
     this.activeLayerId = newLayer.id;
 
     this.updatePreview();
+  }
+
+  callContextMenu(event: MouseEvent) {
+    if (this.tool == Tool.Zoom) event.preventDefault();
+  }
+
+  zoomAt(mouseX: number, mouseY: number, factor: number) {
+    const container = this.canvasContainerRef.nativeElement;
+    const rect = container.getBoundingClientRect();
+
+    const prevZoom = this.zoom;
+    this.zoom *= factor;
+
+    const relX = mouseX;
+    const relY = mouseY;
+
+    this.transformX = relX - (relX - this.transformX) * (this.zoom / prevZoom);
+    this.transformY = relY - (relY - this.transformY) * (this.zoom / prevZoom);
+
+    this.updateCanvasTransforms();
+  }
+
+  updateCanvasTransforms() {
+    const canvasContainer = this.canvasContainerRef.nativeElement;
+    canvasContainer.style.transform = `translate(${this.transformX}px, ${this.transformY}px) scale(${this.zoom})`;
+    canvasContainer.style.transformOrigin = 'top left';
   }
 
   createLayer() {
@@ -470,6 +520,12 @@ export class AppComponent implements AfterViewInit {
 
   useCursorBrush(): boolean {
     return [Tool.Pencil, Tool.Eraser].includes(this.tool);
+  }
+
+  getToolCursor(): string {
+    if (this.useCursorBrush()) return 'none';
+    if (this.tool == Tool.Zoom) return 'zoom-in';
+    return 'default';
   }
 
 }
