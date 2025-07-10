@@ -25,6 +25,7 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('canvasContainer', { static: true }) canvasContainerRef!: ElementRef<HTMLDivElement>;
 
   public tool: Tool = Tool.Pencil;
+  public theme: 'dark' | 'light' = 'dark';
 
   public picture: Picture = new Picture();
   private drawing: boolean = false;

@@ -1,205 +1,208 @@
-<div class="top-menu">
-  <div ngbDropdown class="dropdown me-2">
-    <button class="btn btn-opt btn-sm dropdown-toggle" ngbDropdownToggle>
-      <fa-icon [icon]="faFolder"></fa-icon> Arquivo
-    </button>
-    <div ngbDropdownMenu>
-      <button class="dropdown-item" (click)="openResizeModal(newPictureModal)">
-        <fa-icon [icon]="faFile"></fa-icon> Novo
+<div [attr.data-bs-theme]="theme">
+  <div class="top-menu">
+    <div ngbDropdown class="dropdown me-2">
+      <button class="btn btn-opt btn-sm dropdown-toggle" ngbDropdownToggle>
+        <fa-icon [icon]="faFolder"></fa-icon> Arquivo
       </button>
+      <div ngbDropdownMenu>
+        <button class="dropdown-item" (click)="openResizeModal(newPictureModal)">
+          <fa-icon [icon]="faFile"></fa-icon> Novo
+        </button>
 
-      <label class="dropdown-item">
-        <fa-icon [icon]="faUpload"></fa-icon> Abrir
-        <input
-          type="file"
-          accept="image/*"
-          (change)="handleImageUpload($event)"
-          hidden
-        />
-      </label>
+        <label class="dropdown-item">
+          <fa-icon [icon]="faUpload"></fa-icon> Abrir
+          <input
+            type="file"
+            accept="image/*"
+            (change)="handleImageUpload($event)"
+            hidden
+          />
+        </label>
 
-      <button class="dropdown-item" (click)="saveDrawing()">
-        <fa-icon [icon]="faSave"></fa-icon> Salvar
-      </button>
+        <button class="dropdown-item" (click)="saveDrawing()">
+          <fa-icon [icon]="faSave"></fa-icon> Salvar
+        </button>
 
-      <button class="dropdown-item" (click)="openResizeModal(resizeModal)">
-        <fa-icon [icon]="faCogs"></fa-icon> Propriedades
-      </button>
-    </div>
-  </div>
-</div>
-
-<div class="top-tools">
-  <div class="tool-descri">
-    @if (tool == Tool.Pencil) {
-      <fa-icon [icon]="faPencil"></fa-icon>
-      <b>Pincel</b>
-    } @else if (tool == Tool.Eraser) {
-      <fa-icon [icon]="faEraser"></fa-icon>
-      <b>Borracha</b>
-    } @else if (tool == Tool.Eyedropper) {
-      <fa-icon [icon]="faEyeDropper"></fa-icon>
-      <b>Conta-gotas</b>
-    } @else if (tool == Tool.Bucket) {
-      <fa-icon [icon]="faBucket"></fa-icon>
-      <b>Balde de tinta</b>
-    } @else if (tool == Tool.Zoom) {
-      <fa-icon [icon]="faSearch"></fa-icon>
-      <b>Zoom</b>
-    }
-  </div>
-  <div class="container-slider-tools" *ngIf="useCursorBrush()">
-    <label class="form-label me-2 mb-0">Tamanho:</label>
-    <input
-      type="range"
-      min="1"
-      max="50"
-      [(ngModel)]="lineWidth"
-      class="form-range"
-      style="width: 150px;"
-    />
-    <span class="ms-1">{{ lineWidth }} px</span>
-  </div>
-  <div class="container-slider-tools" *ngIf="tool == Tool.Bucket">
-    <label class="form-label me-2 mb-0">Tolerância:</label>
-    <input
-      type="range"
-      min="1"
-      max="50"
-      [(ngModel)]="tolerance"
-      class="form-range"
-      style="width: 150px;"
-    />
-    <span class="ms-1">{{ tolerance }} px</span>
-  </div>
-  <div class="container-slider-tools" *ngIf="tool == Tool.Zoom">
-    <select class="form-select form-select-sm" [(ngModel)]="zoomType">
-      <option value="in">Zoom In</option>
-      <option value="out">Zoom Out</option>
-    </select>
-  </div>
-</div>
-
-<div class="footer-menu">
-  <div class="container-slider-tools ms-auto">
-    <label class="form-label me-2 mb-0">Zoom: </label>
-    <input
-      type="range"
-      min="0.1"
-      max="4"
-      step="0.1"
-      [(ngModel)]="zoom"
-      class="form-range"
-      style="width: 150px;"
-      (ngModelChange)="updateCanvasTransforms()"
-    />
-    <span class="ms-1">{{ (zoom * 100) | number: '1.0-0' }}%</span>
-  </div>
-</div>
-
-<div class="container-draw">
-  <div class="container-tools p-1">
-    <button class="btn btn-tool" 
-      [class.active]="tool === Tool.Pencil"
-      [ngbTooltip]="'Pincel'" 
-      placement="end"
-      (click)="selectTool(Tool.Pencil)">
-      <fa-icon [icon]="faPencil"></fa-icon>
-    </button>
-    <button class="btn btn-tool" 
-      [class.active]="tool === Tool.Eraser"
-      [ngbTooltip]="'Borracha'" 
-      placement="end"
-      (click)="selectTool(Tool.Eraser)">
-      <fa-icon [icon]="faEraser"></fa-icon>
-    </button>
-    <button class="btn btn-tool"
-      [class.active]="tool === Tool.Bucket" 
-      [ngbTooltip]="'Balde de tinta'" 
-      placement="end"
-      (click)="selectTool(Tool.Bucket)">
-      <fa-icon [icon]="faBucket"></fa-icon>
-    </button>
-    <button class="btn btn-tool"
-      [class.active]="tool === Tool.Eyedropper" 
-      [ngbTooltip]="'Conta-gotas'" 
-      placement="end"
-      (click)="selectTool(Tool.Eyedropper)">
-      <fa-icon [icon]="faEyeDropper"></fa-icon>
-    </button>
-    <button class="btn btn-tool"
-      [class.active]="tool === Tool.Zoom" 
-      [ngbTooltip]="'Zoom'" 
-      placement="end"
-      (click)="selectTool(Tool.Zoom)">
-      <fa-icon [icon]="faSearch"></fa-icon>
-    </button>
-    <input type="color" [(ngModel)]="currentColor" (change)="changeColor($event)" />
-  </div>
-
-  <div class="container-canva">
-    <div #canvasContainer class="my-canva" (mousedown)="startDrawing($event)"
-      (mousemove)="draw($event); updateCursor($event)"
-      (mouseup)="stopDrawing()"
-      (mouseleave)="stopDrawing(); hideCursor()"
-      (contextmenu)="callContextMenu($event)"
-      [style.cursor]="getToolCursor()">
-      <div class="back-square" [style.width.px]="picture.width" [style.height.px]="picture.height"></div>
-    </div>
-  
-    <div
-      class="brush-preview"
-      [ngStyle]="{
-        width: (lineWidth * zoom) + 'px',
-        height: (lineWidth * zoom) + 'px',
-        top: cursorY + 'px',
-        left: cursorX + 'px',
-        display: useCursorBrush() ? 'block' : 'none',
-        borderColor: tool === Tool.Eraser ? '#f00' : '#fff'
-      }"
-    ></div>
-  </div>
-  
-  <div class="tools-right">
-    <div class="tools-box">
-      <div class="tbox-tittle">Preview</div>
-      <div class="canvas-preview back-square">
-        <canvas #previewCanvas></canvas>
-      </div>
-    </div>
-
-    <div class="tools-box">
-      <div class="tbox-tittle">
-        Camadas 
-        <button class="btn btn-sm ms-auto" (click)="createLayer()">
-          <fa-icon [icon]="faPlus"></fa-icon>
+        <button class="dropdown-item" (click)="openResizeModal(resizeModal)">
+          <fa-icon [icon]="faCogs"></fa-icon> Propriedades
         </button>
       </div>
-      @for (layer of layers; track $index; let i = $index) {
-        <div class="layer-item"
-            [class.active]="layer.id == activeLayerId" 
-            (click)="setActiveLayer(layer.id)" >
-          {{ layer.name }}
-          <button class="btn btn-sm ms-auto" (click)="removeLayer(layer.id)">🗑️</button>
-          <button class="btn btn-sm" (click)="toggleLayer(layer.id)">
-            {{ layer.visible ? '👁️' : '🚫' }}
-          </button>
-        </div>
-      }
     </div>
   </div>
+
+  <div class="top-tools">
+    <div class="tool-descri">
+      @if (tool == Tool.Pencil) {
+        <fa-icon [icon]="faPencil"></fa-icon>
+        <b>Pincel</b>
+      } @else if (tool == Tool.Eraser) {
+        <fa-icon [icon]="faEraser"></fa-icon>
+        <b>Borracha</b>
+      } @else if (tool == Tool.Eyedropper) {
+        <fa-icon [icon]="faEyeDropper"></fa-icon>
+        <b>Conta-gotas</b>
+      } @else if (tool == Tool.Bucket) {
+        <fa-icon [icon]="faBucket"></fa-icon>
+        <b>Balde de tinta</b>
+      } @else if (tool == Tool.Zoom) {
+        <fa-icon [icon]="faSearch"></fa-icon>
+        <b>Zoom</b>
+      }
+    </div>
+    <div class="container-slider-tools" *ngIf="useCursorBrush()">
+      <label class="form-label me-2 mb-0">Tamanho:</label>
+      <input
+        type="range"
+        min="1"
+        max="50"
+        [(ngModel)]="lineWidth"
+        class="form-range"
+        style="width: 150px;"
+      />
+      <span class="ms-1">{{ lineWidth }} px</span>
+    </div>
+    <div class="container-slider-tools" *ngIf="tool == Tool.Bucket">
+      <label class="form-label me-2 mb-0">Tolerância:</label>
+      <input
+        type="range"
+        min="1"
+        max="50"
+        [(ngModel)]="tolerance"
+        class="form-range"
+        style="width: 150px;"
+      />
+      <span class="ms-1">{{ tolerance }} px</span>
+    </div>
+    <div class="container-slider-tools" *ngIf="tool == Tool.Zoom">
+      <select class="form-select form-select-sm" [(ngModel)]="zoomType">
+        <option value="in">Zoom In</option>
+        <option value="out">Zoom Out</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="footer-menu">
+    <div class="container-slider-tools ms-auto">
+      <label class="form-label me-2 mb-0">Zoom: </label>
+      <input
+        type="range"
+        min="0.1"
+        max="4"
+        step="0.1"
+        [(ngModel)]="zoom"
+        class="form-range"
+        style="width: 150px;"
+        (ngModelChange)="updateCanvasTransforms()"
+      />
+      <span class="ms-1">{{ (zoom * 100) | number: '1.0-0' }}%</span>
+    </div>
+  </div>
+
+  <div class="container-draw">
+    <div class="container-tools p-1">
+      <button class="btn btn-tool" 
+        [class.active]="tool === Tool.Pencil"
+        [ngbTooltip]="'Pincel'" 
+        placement="end"
+        (click)="selectTool(Tool.Pencil)">
+        <fa-icon [icon]="faPencil"></fa-icon>
+      </button>
+      <button class="btn btn-tool" 
+        [class.active]="tool === Tool.Eraser"
+        [ngbTooltip]="'Borracha'" 
+        placement="end"
+        (click)="selectTool(Tool.Eraser)">
+        <fa-icon [icon]="faEraser"></fa-icon>
+      </button>
+      <button class="btn btn-tool"
+        [class.active]="tool === Tool.Bucket" 
+        [ngbTooltip]="'Balde de tinta'" 
+        placement="end"
+        (click)="selectTool(Tool.Bucket)">
+        <fa-icon [icon]="faBucket"></fa-icon>
+      </button>
+      <button class="btn btn-tool"
+        [class.active]="tool === Tool.Eyedropper" 
+        [ngbTooltip]="'Conta-gotas'" 
+        placement="end"
+        (click)="selectTool(Tool.Eyedropper)">
+        <fa-icon [icon]="faEyeDropper"></fa-icon>
+      </button>
+      <button class="btn btn-tool"
+        [class.active]="tool === Tool.Zoom" 
+        [ngbTooltip]="'Zoom'" 
+        placement="end"
+        (click)="selectTool(Tool.Zoom)">
+        <fa-icon [icon]="faSearch"></fa-icon>
+      </button>
+      <input type="color" [(ngModel)]="currentColor" (change)="changeColor($event)" />
+    </div>
+
+    <div class="container-canva">
+      <div #canvasContainer class="my-canva" (mousedown)="startDrawing($event)"
+        (mousemove)="draw($event); updateCursor($event)"
+        (mouseup)="stopDrawing()"
+        (mouseleave)="stopDrawing(); hideCursor()"
+        (contextmenu)="callContextMenu($event)"
+        [style.cursor]="getToolCursor()">
+        <div class="back-square" [style.width.px]="picture.width" [style.height.px]="picture.height"></div>
+      </div>
+    
+      <div
+        class="brush-preview"
+        [ngStyle]="{
+          width: (lineWidth * zoom) + 'px',
+          height: (lineWidth * zoom) + 'px',
+          top: cursorY + 'px',
+          left: cursorX + 'px',
+          display: useCursorBrush() ? 'block' : 'none',
+          borderColor: tool === Tool.Eraser ? '#f00' : '#fff'
+        }"
+      ></div>
+    </div>
+    
+    <div class="tools-right">
+      <div class="tools-box">
+        <div class="tbox-tittle">Preview</div>
+        <div class="canvas-preview back-square">
+          <canvas #previewCanvas></canvas>
+        </div>
+      </div>
+
+      <div class="tools-box">
+        <div class="tbox-tittle">
+          Camadas 
+          <button class="btn btn-sm ms-auto" (click)="createLayer()">
+            <fa-icon [icon]="faPlus"></fa-icon>
+          </button>
+        </div>
+        @for (layer of layers; track $index; let i = $index) {
+          <div class="layer-item"
+              [class.active]="layer.id == activeLayerId" 
+              (click)="setActiveLayer(layer.id)" >
+            {{ layer.name }}
+            <button class="btn btn-sm ms-auto" (click)="removeLayer(layer.id)">🗑️</button>
+            <button class="btn btn-sm" (click)="toggleLayer(layer.id)">
+              {{ layer.visible ? '👁️' : '🚫' }}
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <ng-template #newPictureModal let-modal>
+    <new-picture-component
+      (createNewPicture)="createNewPicture($event)"
+      (close)="modal.dismiss()">
+    </new-picture-component>
+  </ng-template>
+
+  <ng-template #resizeModal let-modal>
+    <config-component [picture]="picture" 
+      (resizeCanvas)="applyResize($event)"
+      (close)="modal.dismiss()">
+    </config-component>
+  </ng-template>
+
 </div>
-
-<ng-template #newPictureModal let-modal>
-  <new-picture-component
-    (createNewPicture)="createNewPicture($event)"
-    (close)="modal.dismiss()">
-  </new-picture-component>
-</ng-template>
-
-<ng-template #resizeModal let-modal>
-  <config-component [picture]="picture" 
-    (resizeCanvas)="applyResize($event)"
-    (close)="modal.dismiss()">
-  </config-component>
-</ng-template>
