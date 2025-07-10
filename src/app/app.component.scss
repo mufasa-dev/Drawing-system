@@ -49,12 +49,10 @@
 }
 
 .my-canva {
-  width: calc(100% - 400px);
+  width: 100%;
   height: calc(100vh - 100px);
-  overflow: auto;
-  position: relative;
   background-color: transparent;
-  border-radius: 5px;
+  cursor: none;
 }
 
 .back-square {
@@ -97,6 +95,13 @@
       padding: 5px;
     }
   }
+}
+
+.container-canva {
+  position: relative;
+  width: calc(100% - 400px);
+  height: calc(100vh - 100px);
+  overflow: auto;
 }
 
 .brush-preview {
