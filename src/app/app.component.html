@@ -45,7 +45,7 @@
       <b>Balde de tinta</b>
     }
   </div>
-  <div class="container-slider-tools" *ngIf="tool == Tool.Pencil || tool == Tool.Eraser">
+  <div class="container-slider-tools" *ngIf="useCursorBrush()">
     <label class="form-label me-2 mb-0">Tamanho:</label>
     <input
       type="range"
@@ -108,7 +108,8 @@
     <div #canvasContainer class="my-canva" (mousedown)="startDrawing($event)"
       (mousemove)="draw($event); updateCursor($event)"
       (mouseup)="stopDrawing()"
-      (mouseleave)="stopDrawing(); hideCursor()">
+      (mouseleave)="stopDrawing(); hideCursor()"
+      [style.cursor]="useCursorBrush() ? 'none' : 'default'">
       <div class="back-square" [style.width.px]="picture.width" [style.height.px]="picture.height"></div>
     </div>
   
@@ -119,7 +120,7 @@
         height: lineWidth + 'px',
         top: cursorY + 'px',
         left: cursorX + 'px',
-        display: tool === Tool.Pencil || tool === Tool.Eraser ? 'block' : 'none',
+        display: useCursorBrush() ? 'block' : 'none',
         borderColor: tool === Tool.Eraser ? '#f00' : '#fff'
       }"
     ></div>

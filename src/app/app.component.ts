@@ -467,4 +467,8 @@ export class AppComponent implements AfterViewInit {
     reader.readAsDataURL(file);
   }
 
+  useCursorBrush(): boolean {
+    return [Tool.Pencil, Tool.Eraser].includes(this.tool);
+  }
+
 }
