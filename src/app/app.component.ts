@@ -11,10 +11,11 @@ import { Picture } from '../model/picture.model';
 import { ConfigComponent } from "./config-modal/config-modal.component";
 import { hexToRgb, rgbaToHex } from '../utils/color.utils';
 import { NewPictureComponent } from './new-picture/new-picture.component';
+import { LayersComponent } from './layers/layers.component';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FontAwesomeModule, NgbModule, FormsModule, ConfigComponent, NewPictureComponent],
+  imports: [CommonModule, FontAwesomeModule, NgbModule, FormsModule, ConfigComponent, NewPictureComponent, LayersComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

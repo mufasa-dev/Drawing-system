@@ -169,25 +169,14 @@
         </div>
       </div>
 
-      <div class="tools-box">
-        <div class="tbox-tittle">
-          Camadas 
-          <button class="btn btn-sm ms-auto" (click)="createLayer()">
-            <fa-icon [icon]="faPlus"></fa-icon>
-          </button>
-        </div>
-        @for (layer of layers; track $index; let i = $index) {
-          <div class="layer-item"
-              [class.active]="layer.id == activeLayerId" 
-              (click)="setActiveLayer(layer.id)" >
-            {{ layer.name }}
-            <button class="btn btn-sm ms-auto" (click)="removeLayer(layer.id)">🗑️</button>
-            <button class="btn btn-sm" (click)="toggleLayer(layer.id)">
-              {{ layer.visible ? '👁️' : '🚫' }}
-            </button>
-          </div>
-        }
-      </div>
+      <app-layer-panel
+        [layers]="layers"
+        [activeLayerId]="activeLayerId"
+        (onCreateLayer)="createLayer()"
+        (onRemoveLayer)="removeLayer($event)"
+        (onToggleLayer)="toggleLayer($event)"
+        (onSetActiveLayer)="setActiveLayer($event)">
+      </app-layer-panel>
     </div>
   </div>
 

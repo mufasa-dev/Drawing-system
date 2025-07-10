@@ -106,7 +106,7 @@
   border: 1px solid black;
 }
 
-.tools-right {
+::ng-deep .tools-right {
   margin-left: auto;
   padding: 10px;
   & .tools-box {
@@ -124,6 +124,14 @@
     }
     & .canvas-preview {
       padding: 5px;
+    }
+    & .tbox-footer {
+      background-color: #444;
+      border-radius: 0 0 5px 5px;
+      color: white;
+      padding: 0 5px;
+      display: flex;
+      align-items: center;
     }
   }
 }
