@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faBars, faCogs, faEraser, faEyeDropper, faFile, faFolder, faPencil, faPlus, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faBucket, faCogs, faEraser, faEyeDropper, faFile, faFolder, faPencil, faPlus, faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { Layer } from '../model/layer.model';
 import { Picture } from '../model/picture.model';
 import { ConfigComponent } from "./config-modal/config-modal.component";
-import { rgbaToHex } from '../utils/color.utils';
+import { hexToRgb, rgbaToHex } from '../utils/color.utils';
 import { NewPictureComponent } from './new-picture/new-picture.component';
 
 @Component({
@@ -50,6 +50,7 @@ export class AppComponent implements AfterViewInit {
   public faFile = faFile;
   public faBars = faBars;
   public faFolder = faFolder;
+  public faBucket =  faBucket;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private modalService: NgbModal) {
     this.isBrowser = isPlatformBrowser(this.platformId);
@@ -75,8 +76,13 @@ export class AppComponent implements AfterViewInit {
   }
 
   startDrawing(event: MouseEvent) {
-    const layer = this.layers.find(l => l.id === this.activeLayerId);
+    const layer = this.getActiveLayer();
     if (!layer) return;
+
+    if (this.tool == Tool.Bucket) {
+      this.startFill(event);
+      return;
+    }
 
     if (this.tool === Tool.Eyedropper) {
       this.pickColorFromCanvas(event.offsetX, event.offsetY, layer.ctx);
@@ -98,7 +104,7 @@ export class AppComponent implements AfterViewInit {
   draw(event: MouseEvent) {
     if (!this.drawing) return;
 
-    const layer = this.layers.find(l => l.id === this.activeLayerId);
+    const layer = this.getActiveLayer();
     if (!layer) return;
 
     const ctx = layer.ctx;
@@ -124,6 +130,22 @@ export class AppComponent implements AfterViewInit {
     this.updatePreview();
   }
 
+  startFill(event: MouseEvent) {
+    const layer = this.getActiveLayer();
+    if (!layer) return;
+
+    const rect = layer.canvas.getBoundingClientRect();
+    const x = Math.floor(event.clientX - rect.left);
+    const y = Math.floor(event.clientY - rect.top);
+
+    const ctx = layer.ctx;
+    const imageData = ctx.getImageData(0, 0, layer.canvas.width, layer.canvas.height);
+
+    this.floodFill(imageData, x, y, this.currentColor);
+
+    ctx.putImageData(imageData, 0, 0);
+  }
+
   updateCursor(event: MouseEvent) {
     const canvasContainer = this.canvasContainerRef.nativeElement;
     const rect = canvasContainer.getBoundingClientRect();
@@ -137,6 +159,10 @@ export class AppComponent implements AfterViewInit {
     this.cursorY = -9999;
   }
 
+  getActiveLayer() {
+    return this.layers.find(l => l.id === this.activeLayerId);
+  }
+
   selectTool(tool: Tool) {
     this.tool = tool;
   }
@@ -144,7 +170,7 @@ export class AppComponent implements AfterViewInit {
   changeColor(event: Event) {
     const input = event.target as HTMLInputElement;
 
-    const layer = this.layers.find(l => l.id === this.activeLayerId);
+    const layer = this.getActiveLayer();
     if (!layer) return;
 
     layer.ctx.strokeStyle = this.currentColor;
@@ -260,13 +286,58 @@ export class AppComponent implements AfterViewInit {
 
     this.currentColor = color;
 
-    const active = this.layers.find(l => l.id === this.activeLayerId);
+    const active = this.getActiveLayer();
     if (active) {
       active.ctx.strokeStyle = color;
     }
 
     this.tool = Tool.Pencil;
   }
+
+  floodFill(imageData: ImageData, x: number, y: number, fillColorHex: string) {
+    const { data, width, height } = imageData;
+
+    const index = (x: number, y: number) => (y * width + x) * 4;
+
+    const [rF, gF, bF] = hexToRgb(fillColorHex);
+    const stack = [[x, y]];
+
+    const startIdx = index(x, y);
+    const targetColor = [
+      data[startIdx],
+      data[startIdx + 1],
+      data[startIdx + 2],
+      data[startIdx + 3]
+    ];
+
+    const matchColor = (i: number) =>
+      data[i] === targetColor[0] &&
+      data[i + 1] === targetColor[1] &&
+      data[i + 2] === targetColor[2] &&
+      data[i + 3] === targetColor[3];
+
+    const setColor = (i: number) => {
+      data[i] = rF;
+      data[i + 1] = gF;
+      data[i + 2] = bF;
+      data[i + 3] = 255;
+    };
+
+    while (stack.length) {
+      const [cx, cy] = stack.pop()!;
+      const i = index(cx, cy);
+
+      if (!matchColor(i)) continue;
+
+      setColor(i);
+
+      if (cx > 0) stack.push([cx - 1, cy]);
+      if (cx < width - 1) stack.push([cx + 1, cy]);
+      if (cy > 0) stack.push([cx, cy - 1]);
+      if (cy < height - 1) stack.push([cx, cy + 1]);
+    }
+  }
+
 
   resizeCanvas() {
     this.layers.forEach(layer => {
