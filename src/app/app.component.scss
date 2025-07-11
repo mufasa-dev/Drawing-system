@@ -116,6 +116,8 @@
     border: 1px solid #444;
     margin-bottom: 10px;
     & .tbox-tittle {
+      cursor: pointer;
+      user-select: none;  
       background-color: #555;
       border-radius: 5px 5px 0px 0;
       color: white;

@@ -22,6 +22,7 @@ export class LayersComponent {
 
   public selectedLayer: Layer  = new Layer();
   public newName: string = "";
+  public openBox: boolean = true;
 
   public faPlus = faPlus;
   public faEye = faEye;
@@ -47,6 +48,10 @@ export class LayersComponent {
 
   setActiveLayer(id: string) {
     this.onSetActiveLayer.emit(id);
+  }
+
+  toggleOpenBox() {
+    this.openBox = !this.openBox;
   }
 
   openModal(content: any, layer: Layer) {

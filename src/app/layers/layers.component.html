@@ -1,24 +1,26 @@
 <div class="tools-box">
-  <div class="tbox-tittle">
+  <div class="tbox-tittle" (click)="toggleOpenBox()">
     Camadas 
-    <button class="btn btn-sm ms-auto" (click)="createLayer()">
-      <fa-icon [icon]="faPlus"></fa-icon>
-    </button>
   </div>
-  @for (layer of layers.slice().reverse(); track layer.id; let i = $index) {
-    <div class="layer-item"
-        [class.active]="layer.id === activeLayerId"
-        (click)="setActiveLayer(layer.id)">
-      <button class="btn btn-sm" (click)="toggleLayer(layer.id)">
-        <fa-icon [icon]="layer.visible ? faEye : faBan"></fa-icon>
-      </button>
-      <div (dblclick)="openModal(optLayerModal, layer)">{{ layer.name }}</div>
-    </div>
+  @if (openBox) {
+    @for (layer of layers.slice().reverse(); track layer.id; let i = $index) {
+      <div class="layer-item"
+          [class.active]="layer.id === activeLayerId"
+          (click)="setActiveLayer(layer.id)">
+        <button class="btn btn-sm" (click)="toggleLayer(layer.id)">
+          <fa-icon [icon]="layer.visible ? faEye : faBan"></fa-icon>
+        </button>
+        <div (dblclick)="openModal(optLayerModal, layer)">{{ layer.name }}</div>
+      </div>
+    }
   }
   <div class="tbox-footer">
-      <button class="btn btn-sm ms-auto" (click)="removeLayer(activeLayerId)" [ngbTooltip]="'Apagar camada'">
-        <fa-icon [icon]="faTrash"></fa-icon>
-      </button>
+    <button class="btn btn-sm" (click)="createLayer()" [ngbTooltip]="'Adicionar camada'">
+      <fa-icon [icon]="faPlus"></fa-icon>
+    </button>
+    <button class="btn btn-sm ms-auto" (click)="removeLayer(activeLayerId)" [ngbTooltip]="'Apagar camada'">
+      <fa-icon [icon]="faTrash"></fa-icon>
+    </button>
   </div>
 </div>
 
