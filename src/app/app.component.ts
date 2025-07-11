@@ -12,6 +12,7 @@ import { ConfigComponent } from "./config-modal/config-modal.component";
 import { hexToRgb, rgbaToHex } from '../utils/color.utils';
 import { NewPictureComponent } from './new-picture/new-picture.component';
 import { LayersComponent } from './layers/layers.component';
+import { BrushType } from '../enum/brush-type.enum';
 
 @Component({
   selector: 'app-root',
@@ -46,6 +47,9 @@ export class AppComponent implements AfterViewInit {
   public countLayers: number = 1;
   public transformX = 0;
   public transformY = 0;
+  public brushType: BrushType = BrushType.Round;
+  
+  public BrushType = BrushType;
   public Tool = Tool;
 
   public faPencil = faPencil;
@@ -140,6 +144,10 @@ export class AppComponent implements AfterViewInit {
 
     const ctx = layer.ctx;
 
+    const x = event.offsetX;
+    const y = event.offsetY;
+
+    // Salva estado atual
     const originalComposite = ctx.globalCompositeOperation;
     const originalStroke = ctx.strokeStyle;
     const originalWidth = ctx.lineWidth;
@@ -149,17 +157,35 @@ export class AppComponent implements AfterViewInit {
     if (this.tool === Tool.Eraser) {
       ctx.globalCompositeOperation = 'destination-out';
       ctx.strokeStyle = 'rgba(0,0,0,1)';
+    } else {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.strokeStyle = this.currentColor;
     }
 
-    ctx.lineTo(event.offsetX, event.offsetY);
-    ctx.stroke();
+    // Seleciona o tipo de pincel
+    switch (this.brushType) {
+      case BrushType.Round:
+        this.drawRound(ctx, x, y);
+        break;
+      case BrushType.Square:
+        this.drawSquare(ctx, x, y);
+        break;
+      case BrushType.Spray:
+        this.drawSpray(ctx, x, y);
+        break;
+      // Adicione outros tipos aqui
+      default:
+        this.drawRound(ctx, x, y);
+    }
 
+    // Restaura estado
     ctx.globalCompositeOperation = originalComposite;
     ctx.strokeStyle = originalStroke;
     ctx.lineWidth = originalWidth;
 
     this.updatePreview();
   }
+
 
   startFill(event: MouseEvent) {
     const layer = this.getActiveLayer();

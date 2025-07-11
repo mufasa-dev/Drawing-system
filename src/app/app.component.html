@@ -49,6 +49,13 @@
         <b>Zoom</b>
       }
     </div>
+    <div class="container-slider-tools me-1" *ngIf="tool == Tool.Pencil">
+      <select class="form-select form-select-sm" [(ngModel)]="brushType" style="width: auto">
+        <option [value]="BrushType.Round">Padrão</option>
+        <option [value]="BrushType.Spray">Spray</option>
+        <option [value]="BrushType.Square">Quadrado</option>
+      </select>
+    </div>
     <div class="container-slider-tools" *ngIf="useCursorBrush()">
       <label class="form-label me-2 mb-0">Tamanho:</label>
       <input
