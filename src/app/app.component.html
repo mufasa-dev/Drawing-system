@@ -161,10 +161,10 @@
     </div>
 
     <div class="container-canva">
-      <div #canvasContainer class="my-canva" (mousedown)="startDrawing($event)"
-        (mousemove)="draw($event); updateCursor($event)"
-        (mouseup)="stopDrawing()"
-        (mouseleave)="stopDrawing(); hideCursor()"
+      <div #canvasContainer class="my-canva" (pointerdown)="startDrawing($event)"
+        (pointermove)="draw($event); updateCursor($event)"
+        (pointerup)="stopDrawing()"
+        (pointerleave)="stopDrawing(); hideCursor()"
         (contextmenu)="callContextMenu($event)"
         [style.cursor]="getToolCursor()">
         <div class="back-square" [style.width.px]="picture.width" [style.height.px]="picture.height"></div>

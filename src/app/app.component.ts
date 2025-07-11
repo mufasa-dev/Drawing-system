@@ -92,7 +92,7 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  startDrawing(event: MouseEvent) {
+  startDrawing(event: PointerEvent) {
     const layer = this.getActiveLayer();
     if (!layer) return;
 
@@ -140,7 +140,7 @@ export class AppComponent implements AfterViewInit {
     this.zoomAt(x, y, factor);
   }
 
-  draw(event: MouseEvent) {
+  draw(event: PointerEvent) {
     if (!this.drawing) return;
 
     const layer = this.getActiveLayer();
@@ -151,6 +151,7 @@ export class AppComponent implements AfterViewInit {
     const x = event.offsetX;
     const y = event.offsetY;
 
+    const pressure = event.pressure || 1;
     const originalComposite = ctx.globalCompositeOperation;
     const originalStroke = ctx.strokeStyle;
     const originalWidth = ctx.lineWidth;
@@ -165,7 +166,7 @@ export class AppComponent implements AfterViewInit {
       ctx.strokeStyle = this.currentColor;
     }
 
-    this.brushService.draw(ctx, x, y, this.brushType, this.lineWidth, this.currentColor, this.opacity);
+    this.brushService.draw(ctx, x, y, this.brushType, this.lineWidth, this.currentColor, this.opacity, pressure);
 
     ctx.globalCompositeOperation = originalComposite;
     ctx.strokeStyle = originalStroke;
@@ -175,7 +176,7 @@ export class AppComponent implements AfterViewInit {
   }
 
 
-  startFill(event: MouseEvent) {
+  startFill(event: PointerEvent) {
     const layer = this.getActiveLayer();
     if (!layer) return;
 
@@ -191,7 +192,7 @@ export class AppComponent implements AfterViewInit {
     ctx.putImageData(imageData, 0, 0);
   }
 
-  updateCursor(event: MouseEvent) {
+  updateCursor(event: PointerEvent) {
     const canvasContainer = this.canvasContainerRef.nativeElement;
     const rect = canvasContainer.getBoundingClientRect();
 

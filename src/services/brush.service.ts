@@ -4,11 +4,11 @@ import { BrushType } from '../enum/brush-type.enum';
 @Injectable({ providedIn: 'root' })
 export class BrushService {
 
-  draw(ctx: CanvasRenderingContext2D, x: number, y: number, type: BrushType, size: number, color: string, opacity: number) {
-    ctx.lineWidth = size;
+  draw(ctx: CanvasRenderingContext2D, x: number, y: number, type: BrushType, size: number, color: string, opacity: number, pressure: number) {
+    ctx.lineWidth = size * pressure;
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
-    ctx.globalAlpha = opacity;
+    ctx.globalAlpha = opacity * pressure;
 
     switch (type) {
       case BrushType.Round:
