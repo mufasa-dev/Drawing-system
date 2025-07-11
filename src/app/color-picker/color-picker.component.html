@@ -1,28 +1,39 @@
 <div class="color-picker">
-  <canvas
-    #svCanvas
-    width="200"
-    height="150"
-    (click)="onSVSelect($event)"
-  ></canvas>
+  <div class="sv-hue-container">
+    <!-- Saturation / Value canvas -->
+    <canvas
+      #svCanvas
+      width="200"
+      height="150"
+      (click)="onSVSelect($event)"
+    ></canvas>
 
-  <canvas
-    #hueCanvas
-    width="200"
-    height="20"
-    (click)="onHueSelect($event)"
-  ></canvas>
+    <!-- Hue bar (vertical) -->
+    <canvas
+      #hueCanvas
+      class="hue-canvas"
+      width="20"
+      height="150"
+      (click)="onHueSelect($event)"
+    ></canvas>
+  </div>
 
-  <div class="opacity">
-    <label>Opacidade</label>
-    <input
-      #opacitySlider
-      type="range"
-      min="0"
-      max="1"
-      step="0.01"
-      [value]="opacity"
-      (input)="onOpacityChange($event)"
-    />
+  <!-- Cor atual e Opacidade -->
+  <div class="controls">
+    <div class="selected-color" [style.background]="selectedColor"></div>
+
+    <div class="opacity">
+      <label for="opacitySlider">Opacidade</label>
+      <input
+        #opacitySlider
+        id="opacitySlider"
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        [value]="opacity"
+        (input)="onOpacityChange($event)"
+      />
+    </div>
   </div>
 </div>
