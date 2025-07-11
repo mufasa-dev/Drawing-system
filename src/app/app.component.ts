@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { Layer } from '../model/layer.model';
 import { Picture } from '../model/picture.model';
 import { ConfigComponent } from "./config-modal/config-modal.component";
-import { hexToRgb, rgbaToHex } from '../utils/color.utils';
+import { hexToRgb, rgbaStringToHex, rgbaToHex } from '../utils/color.utils';
 import { NewPictureComponent } from './new-picture/new-picture.component';
 import { LayersComponent } from './layers/layers.component';
 import { BrushType } from '../enum/brush-type.enum';
@@ -215,7 +215,8 @@ export class AppComponent implements AfterViewInit {
   }
 
   onColorChange(color: string) {
-    this.currentColor = color;
+    console.log('color', color)
+    this.currentColor = rgbaStringToHex(color);
     const active = this.getActiveLayer();
     if (active) active.ctx.strokeStyle = color;
   }

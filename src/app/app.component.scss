@@ -41,7 +41,7 @@
 .container-draw {
     display: flex;
     width: 100%;
-    min-height: calc(100vh - 45px);
+    min-height: calc(100vh - 120px);
     padding: 10px;
     background: #333;
     .container-tools {
@@ -109,8 +109,9 @@
 ::ng-deep .tools-right {
   margin-left: auto;
   padding: 10px;
+  max-height: calc(100vh - 120px);
+  overflow: auto;
   & .tools-box {
-    background-color: white;
     border-radius: 10px;
     border: 1px solid #444;
     margin-bottom: 10px;
@@ -139,7 +140,7 @@
 .container-canva {
   position: relative;
   width: calc(100% - 400px);
-  height: calc(100vh - 100px);
+  height: calc(100vh - 120px);
   overflow: auto;
 }
 

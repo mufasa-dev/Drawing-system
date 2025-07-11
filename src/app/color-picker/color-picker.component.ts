@@ -1,3 +1,4 @@
+import { isPlatformBrowser } from '@angular/common';
 import {
   Component,
   ElementRef,
@@ -5,7 +6,9 @@ import {
   Output,
   ViewChild,
   AfterViewInit,
-  HostListener
+  HostListener,
+  Inject,
+  PLATFORM_ID
 } from '@angular/core';
 
 @Component({
@@ -20,14 +23,21 @@ export class ColorPickerComponent implements AfterViewInit {
 
   @Output() colorSelected = new EventEmitter<string>();
 
-  hue: number = 0; // 0 a 360
-  saturation: number = 1; // 0 a 1
-  value: number = 1; // 0 a 1
-  opacity: number = 1; // 0 a 1
+  public hue: number = 0; // 0 a 360
+  public saturation: number = 1; // 0 a 1
+  public value: number = 1; // 0 a 1
+  public opacity: number = 1; // 0 a 1
+  public isBrowser: boolean = false;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+  }
 
   ngAfterViewInit(): void {
-    this.drawHueRing();
-    this.drawSVBox();
+    if (this.isBrowser) {
+      this.drawHueRing();
+      this.drawSVBox();
+    }
   }
 
   drawHueRing() {
