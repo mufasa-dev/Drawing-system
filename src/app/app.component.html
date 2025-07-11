@@ -185,15 +185,19 @@
     
     <div class="tools-right">
       <div class="tools-box">
-        <div class="tbox-tittle">Preview</div>
-        <div class="canvas-preview back-square">
-          <canvas #previewCanvas></canvas>
-        </div>
+        <div class="tbox-tittle" (click)="toggleBoxPreview()">Preview</div>
+        @if (openBoxPreview) {
+          <div class="canvas-preview back-square">
+            <canvas #previewCanvas></canvas>
+          </div>
+        }
       </div>
 
       <div class="tools-box">
-        <div class="tbox-tittle">Cor</div>
-        <app-color-picker (colorSelected)="onColorChange($event)"></app-color-picker>
+        <div class="tbox-tittle" (click)="toggleBoxColor()">Cor</div>
+        @if (openBoxColor) {
+          <app-color-picker (colorSelected)="onColorChange($event)"></app-color-picker>
+        }
       </div>
 
       <app-layer-panel

@@ -52,6 +52,8 @@ export class AppComponent implements AfterViewInit {
   public transformX = 0;
   public transformY = 0;
   public brushType: BrushType = BrushType.Round;
+  public openBoxPreview: boolean = true;
+  public openBoxColor: boolean = true;
   
   public BrushType = BrushType;
   public Tool = Tool;
@@ -215,12 +217,18 @@ export class AppComponent implements AfterViewInit {
   }
 
   onColorChange(color: string) {
-    console.log('color', color)
     this.currentColor = rgbaStringToHex(color);
     const active = this.getActiveLayer();
     if (active) active.ctx.strokeStyle = color;
   }
+  
+  toggleBoxPreview() {
+    this.openBoxPreview = !this.openBoxPreview;
+  }
 
+  toggleBoxColor() {
+    this.openBoxColor = !this.openBoxColor;
+  }
 
   createNewPicture(picture: Picture) {
     this.picture = { ...picture };
