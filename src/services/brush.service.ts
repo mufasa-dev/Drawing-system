@@ -4,9 +4,11 @@ import { BrushType } from '../enum/brush-type.enum';
 @Injectable({ providedIn: 'root' })
 export class BrushService {
 
-  draw(ctx: CanvasRenderingContext2D, x: number, y: number, type: BrushType, size: number, color: string) {
+  draw(ctx: CanvasRenderingContext2D, x: number, y: number, type: BrushType, size: number, color: string, opacity: number) {
     ctx.lineWidth = size;
     ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.globalAlpha = opacity;
 
     switch (type) {
       case BrushType.Round:
@@ -19,6 +21,8 @@ export class BrushService {
         this.drawSpray(ctx, x, y, size, color);
         break;
     }
+
+    ctx.globalAlpha = 1.0;
   }
 
   private drawRound(ctx: CanvasRenderingContext2D, x: number, y: number) {

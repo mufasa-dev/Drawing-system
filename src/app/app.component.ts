@@ -39,6 +39,7 @@ export class AppComponent implements AfterViewInit {
   public cursorY: number = 0;
   public lineWidth: number = 5;
   public tolerance: number = 30;
+  public opacity: number = 1;
   public zoom: number = 1;
   public zoomStep: number = 0.1;
   public zoomType: 'in' | 'out' = 'in';
@@ -164,7 +165,7 @@ export class AppComponent implements AfterViewInit {
       ctx.strokeStyle = this.currentColor;
     }
 
-    this.brushService.draw(ctx, x, y, this.brushType, this.lineWidth, this.currentColor);
+    this.brushService.draw(ctx, x, y, this.brushType, this.lineWidth, this.currentColor, this.opacity);
 
     ctx.globalCompositeOperation = originalComposite;
     ctx.strokeStyle = originalStroke;
