@@ -13,6 +13,7 @@ import { hexToRgb, rgbaToHex } from '../utils/color.utils';
 import { NewPictureComponent } from './new-picture/new-picture.component';
 import { LayersComponent } from './layers/layers.component';
 import { BrushType } from '../enum/brush-type.enum';
+import { BrushService } from '../services/brush.service';
 
 @Component({
   selector: 'app-root',
@@ -65,7 +66,9 @@ export class AppComponent implements AfterViewInit {
   public faBucket =  faBucket;
   public faSearch = faSearch;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private modalService: NgbModal) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, 
+        private modalService: NgbModal, 
+        private brushService: BrushService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
@@ -147,7 +150,6 @@ export class AppComponent implements AfterViewInit {
     const x = event.offsetX;
     const y = event.offsetY;
 
-    // Salva estado atual
     const originalComposite = ctx.globalCompositeOperation;
     const originalStroke = ctx.strokeStyle;
     const originalWidth = ctx.lineWidth;
@@ -162,23 +164,8 @@ export class AppComponent implements AfterViewInit {
       ctx.strokeStyle = this.currentColor;
     }
 
-    // Seleciona o tipo de pincel
-    switch (this.brushType) {
-      case BrushType.Round:
-        this.drawRound(ctx, x, y);
-        break;
-      case BrushType.Square:
-        this.drawSquare(ctx, x, y);
-        break;
-      case BrushType.Spray:
-        this.drawSpray(ctx, x, y);
-        break;
-      // Adicione outros tipos aqui
-      default:
-        this.drawRound(ctx, x, y);
-    }
+    this.brushService.draw(ctx, x, y, this.brushType, this.lineWidth, this.currentColor);
 
-    // Restaura estado
     ctx.globalCompositeOperation = originalComposite;
     ctx.strokeStyle = originalStroke;
     ctx.lineWidth = originalWidth;
