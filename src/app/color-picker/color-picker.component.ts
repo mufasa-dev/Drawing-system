@@ -26,7 +26,6 @@ export class ColorPickerComponent implements AfterViewInit {
   public hue: number = 0; // 0 a 360
   public saturation: number = 1; // 0 a 1
   public value: number = 1; // 0 a 1
-  public opacity: number = 1; // 0 a 1
   public selectedColor: string = 'rgba(255, 0, 0, 1)';
   public isBrowser: boolean = false;
 
@@ -124,14 +123,13 @@ export class ColorPickerComponent implements AfterViewInit {
 
   onOpacityChange(event: Event) {
     const input = event.target as HTMLInputElement;
-    this.opacity = parseFloat(input.value);
     this.emitColor();
   }
 
   emitColor() {
     const [r, g, b] = this.hsvToRgb(this.hue, this.saturation, this.value);
-    const rgba = `rgba(${r}, ${g}, ${b}, ${this.opacity.toFixed(2)})`;
-    this.selectedColor = rgba; // Atualiza visualização
+    const rgba = `rgba(${r}, ${g}, ${b}, 1)`;
+    this.selectedColor = rgba;
     this.colorSelected.emit(rgba);
   }
 
