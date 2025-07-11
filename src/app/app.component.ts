@@ -193,6 +193,8 @@ export class AppComponent implements AfterViewInit {
     this.floodFill(imageData, x, y, this.currentColor);
 
     ctx.putImageData(imageData, 0, 0);
+
+    this.updatePreview();
   }
 
   updateCursor(event: PointerEvent) {
