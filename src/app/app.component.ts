@@ -14,10 +14,12 @@ import { NewPictureComponent } from './new-picture/new-picture.component';
 import { LayersComponent } from './layers/layers.component';
 import { BrushType } from '../enum/brush-type.enum';
 import { BrushService } from '../services/brush.service';
+import { ColorPickerComponent } from './color-picker/color-picker.component';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, FontAwesomeModule, NgbModule, FormsModule, ConfigComponent, NewPictureComponent, LayersComponent],
+  imports: [CommonModule, FontAwesomeModule, NgbModule, FormsModule, ConfigComponent, 
+            NewPictureComponent, LayersComponent, ColorPickerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -175,7 +177,6 @@ export class AppComponent implements AfterViewInit {
     this.updatePreview();
   }
 
-
   startFill(event: PointerEvent) {
     const layer = this.getActiveLayer();
     if (!layer) return;
@@ -213,14 +214,12 @@ export class AppComponent implements AfterViewInit {
     this.tool = tool;
   }
 
-  changeColor(event: Event) {
-    const input = event.target as HTMLInputElement;
-
-    const layer = this.getActiveLayer();
-    if (!layer) return;
-
-    layer.ctx.strokeStyle = this.currentColor;
+  onColorChange(color: string) {
+    this.currentColor = color;
+    const active = this.getActiveLayer();
+    if (active) active.ctx.strokeStyle = color;
   }
+
 
   createNewPicture(picture: Picture) {
     this.picture = { ...picture };

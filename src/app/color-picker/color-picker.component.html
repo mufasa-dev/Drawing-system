@@ -1,0 +1,28 @@
+<div class="color-picker">
+  <canvas
+    #svCanvas
+    width="200"
+    height="150"
+    (click)="onSVSelect($event)"
+  ></canvas>
+
+  <canvas
+    #hueCanvas
+    width="200"
+    height="20"
+    (click)="onHueSelect($event)"
+  ></canvas>
+
+  <div class="opacity">
+    <label>Opacidade</label>
+    <input
+      #opacitySlider
+      type="range"
+      min="0"
+      max="1"
+      step="0.01"
+      [value]="opacity"
+      (input)="onOpacityChange($event)"
+    />
+  </div>
+</div>

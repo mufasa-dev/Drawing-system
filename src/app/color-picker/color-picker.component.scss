@@ -1,0 +1,21 @@
+.color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  canvas {
+    border: 1px solid #aaa;
+    cursor: crosshair;
+    border-radius: 4px;
+  }
+
+  .opacity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    input[type="range"] {
+      width: 150px;
+    }
+  }
+}

@@ -157,7 +157,7 @@
         (click)="selectTool(Tool.Zoom)">
         <fa-icon [icon]="faSearch"></fa-icon>
       </button>
-      <input type="color" [(ngModel)]="currentColor" (change)="changeColor($event)" />
+      <input type="color" [(ngModel)]="currentColor" (change)="onColorChange(currentColor)" />
     </div>
 
     <div class="container-canva">
@@ -189,6 +189,11 @@
         <div class="canvas-preview back-square">
           <canvas #previewCanvas></canvas>
         </div>
+      </div>
+
+      <div class="tools-box">
+        <div class="tbox-tittle">Cor</div>
+        <app-color-picker (colorSelected)="onColorChange($event)"></app-color-picker>
       </div>
 
       <app-layer-panel
