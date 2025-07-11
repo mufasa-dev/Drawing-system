@@ -10,6 +10,22 @@ export function rgbaToHex(r: number, g: number, b: number): string {
     );
 }
 
+export function rgbaStringToHex(rgba: string): string {
+  const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([0-9.]+)?\)/);
+
+  if (!match) return '#000000';
+
+  const r = parseInt(match[1]);
+  const g = parseInt(match[2]);
+  const b = parseInt(match[3]);
+  const a = match[4] !== undefined ? Math.round(parseFloat(match[4]) * 255) : 255;
+
+  const toHex = (val: number) => val.toString(16).padStart(2, '0');
+
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+
 export function hexToRgb(hex: string): [number, number, number] {
   hex = hex.replace(/^#/, '');
   const bigint = parseInt(hex, 16);
