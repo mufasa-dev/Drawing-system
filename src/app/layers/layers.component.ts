@@ -4,10 +4,11 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { faBan, faEye, faPlus, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-layer-panel',
-  imports: [ FontAwesomeModule, NgbModule, FormsModule ],
+  imports: [ FontAwesomeModule, NgbModule, FormsModule, DragDropModule ],
   templateUrl: './layers.component.html',
   styleUrls: ['../app.component.scss']
 })
@@ -63,4 +64,13 @@ export class LayersComponent {
   changeLayerOpts() {
     this.selectedLayer.name = this.newName;
   }
+
+  onDrop(event: CdkDragDrop<Layer[]>) {
+    moveItemInArray(this.layers, event.previousIndex, event.currentIndex);
+  }
+
+  trackById(index: number, layer: Layer) {
+    return layer.id;
+  }
+
 }

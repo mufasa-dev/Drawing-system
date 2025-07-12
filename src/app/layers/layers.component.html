@@ -1,10 +1,10 @@
-<div class="tools-box">
+<div class="tools-box" cdkDropList [cdkDropListData]="layers" (cdkDropListDropped)="onDrop($event)">
   <div class="tbox-tittle" (click)="toggleOpenBox()">
     Camadas 
   </div>
   @if (openBox) {
     @for (layer of layers.slice().reverse(); track layer.id; let i = $index) {
-      <div class="layer-item"
+      <div class="layer-item" cdkDrag
           [class.active]="layer.id === activeLayerId"
           (click)="setActiveLayer(layer.id)">
         <button class="btn btn-sm" (click)="toggleLayer(layer.id)">
