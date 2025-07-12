@@ -11,6 +11,11 @@ export function rgbaToHex(r: number, g: number, b: number): string {
 }
 
 export function rgbaStringToHex(rgba: string): string {
+  // Verifica se já é um hex válido
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(rgba.trim())) {
+    return rgba;
+  }
+  
   const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([0-9.]+)?\)/);
 
   if (!match) return '#000000';
