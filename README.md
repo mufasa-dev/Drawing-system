@@ -2,7 +2,11 @@
 
 A modern browser-based drawing application built with **Angular 19**, supporting multiple layers, brushes, opacity, pressure sensitivity (if available), and color picking similar to Photoshop or Krita. 🎨
 
-> Live Demo 👉 [Click here](https://mufasa-dev.github.io/Drawing-system/)
+[![My Skills](https://skillicons.dev/icons?i=angular,ts,html,scss,bootstrap)](https://skillicons.dev)
+
+# ⭐️ Live Demo
+
+> 👉 [Click here](https://mufasa-dev.github.io/Drawing-system/)
 
 ## ✨ Features
 
