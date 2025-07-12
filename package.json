@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href /Drawing-system/",
+    "deploy": "npx angular-cli-ghpages --dir=dist/drawing-system",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:drawing-system": "node dist/drawing-system/server/server.mjs"
