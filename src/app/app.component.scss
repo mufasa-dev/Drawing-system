@@ -117,7 +117,8 @@
     margin-bottom: 10px;
     & .tbox-tittle {
       cursor: pointer;
-      user-select: none;  
+      width: 300px;
+      user-select: none;
       background-color: #555;
       border-radius: 5px 5px 0px 0;
       color: white;
@@ -126,7 +127,7 @@
       align-items: center;
     }
     & .canvas-preview {
-      padding: 5px;
+      padding: 0;
     }
     & .tbox-footer {
       background-color: #444;

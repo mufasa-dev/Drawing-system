@@ -26,7 +26,7 @@ export class ColorPickerComponent implements AfterViewInit {
   public hue: number = 0; // 0 a 360
   public saturation: number = 1; // 0 a 1
   public value: number = 1; // 0 a 1
-  public selectedColor: string = 'rgba(255, 0, 0, 1)';
+  public selectedColor: string = 'rgba(0, 0, 0, 1)';
   public isBrowser: boolean = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
