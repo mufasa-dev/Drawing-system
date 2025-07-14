@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Inject, ViewChild } from '@angular/core';
 import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faBan, faBars, faBucket, faCogs, faEraser, faEyeDropper, faFile, faFolder, faPencil, faPlus, faRotateLeft, faSave, faSearch, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faBars, faCogs, faEraser, faEyeDropper, faFile, faFillDrip, faFolder, faPencil, faPlus, faRotateLeft, faSave, faSearch, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
@@ -71,7 +71,7 @@ export class AppComponent implements AfterViewInit {
   public faFile = faFile;
   public faBars = faBars;
   public faFolder = faFolder;
-  public faBucket =  faBucket;
+  public faFillDrip =  faFillDrip;
   public faSearch = faSearch;
   public faRotateLeft = faRotateLeft;
   public faBan = faBan;

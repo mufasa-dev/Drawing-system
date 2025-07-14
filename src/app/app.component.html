@@ -42,7 +42,7 @@
         <fa-icon [icon]="faEyeDropper"></fa-icon>
         <b>Conta-gotas</b>
       } @else if (tool == Tool.Bucket) {
-        <fa-icon [icon]="faBucket"></fa-icon>
+        <fa-icon [icon]="faFillDrip"></fa-icon>
         <b>Balde de tinta</b>
       } @else if (tool == Tool.Zoom) {
         <fa-icon [icon]="faSearch"></fa-icon>
@@ -141,7 +141,7 @@
         [ngbTooltip]="'Balde de tinta'" 
         placement="end"
         (click)="selectTool(Tool.Bucket)">
-        <fa-icon [icon]="faBucket"></fa-icon>
+        <fa-icon [icon]="faFillDrip"></fa-icon>
       </button>
       <button class="btn btn-tool"
         [class.active]="tool === Tool.Eyedropper" 
