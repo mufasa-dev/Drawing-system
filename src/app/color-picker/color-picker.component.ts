@@ -8,25 +8,30 @@ import {
   AfterViewInit,
   HostListener,
   Inject,
-  PLATFORM_ID
+  PLATFORM_ID,
+  Input,
+  OnChanges,
+  SimpleChanges
 } from '@angular/core';
+import { rgbToHsv } from '../../utils/color.utils';
 
 @Component({
   selector: 'app-color-picker',
   templateUrl: './color-picker.component.html',
   styleUrls: ['./color-picker.component.scss']
 })
-export class ColorPickerComponent implements AfterViewInit {
+export class ColorPickerComponent implements AfterViewInit, OnChanges {
   @ViewChild('svCanvas') svCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('hueCanvas') hueCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('opacitySlider') opacitySliderRef!: ElementRef<HTMLInputElement>;
 
+  @Input() public selectedColor: string = 'rgba(0, 0, 0, 1)';
+  
   @Output() colorSelected = new EventEmitter<string>();
 
   public hue: number = 0; // 0 a 360
   public saturation: number = 1; // 0 a 1
   public value: number = 1; // 0 a 1
-  public selectedColor: string = 'rgba(0, 0, 0, 1)';
   public isBrowser: boolean = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
@@ -39,6 +44,42 @@ export class ColorPickerComponent implements AfterViewInit {
       this.drawSVBox();
     }
   }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedColor'] && this.isBrowser) {
+      const color = changes['selectedColor'].currentValue;
+      this.setColorFromExternal(color);
+    }
+  }
+
+  setColorFromExternal(color: string) {
+    let rgbaMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/);
+    let r = 0, g = 0, b = 0, a = 1;
+
+    if (rgbaMatch) {
+      r = parseInt(rgbaMatch[1], 10);
+      g = parseInt(rgbaMatch[2], 10);
+      b = parseInt(rgbaMatch[3], 10);
+      a = rgbaMatch[4] ? parseFloat(rgbaMatch[4]) : 1;
+    } else if (color.startsWith('#')) {
+      const hex = color.replace('#', '');
+      if (hex.length === 6) {
+        r = parseInt(hex.slice(0, 2), 16);
+        g = parseInt(hex.slice(2, 4), 16);
+        b = parseInt(hex.slice(4, 6), 16);
+      }
+    }
+
+    const [h, s, v] = rgbToHsv(r, g, b);
+    this.hue = h;
+    this.saturation = s;
+    this.value = v;
+
+    this.drawHueRing();
+    this.drawSVBox();
+    this.emitColor();
+  }
+
 
   drawHueRing() {
     const canvas = this.hueCanvasRef.nativeElement;

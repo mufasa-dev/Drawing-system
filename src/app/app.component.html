@@ -196,7 +196,7 @@
       <div class="tools-box">
         <div class="tbox-tittle" (click)="toggleBoxColor()">Cor</div>
         @if (openBoxColor) {
-          <app-color-picker (colorSelected)="onColorChange($event)"></app-color-picker>
+          <app-color-picker [selectedColor]="currentColor" (colorSelected)="onColorChange($event)"></app-color-picker>
         }
       </div>
 
