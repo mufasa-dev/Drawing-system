@@ -582,6 +582,16 @@ export class AppComponent implements AfterViewInit {
   handleKeydown(event: KeyboardEvent) {
     if (event.key.toLowerCase() === 'x') {
       this.swapColors();
+    } else if (event.key.toLowerCase() === 'z') {
+      this.selectTool(Tool.Zoom);
+    } else if (event.key.toLowerCase() === 'b') {
+      this.selectTool(Tool.Pencil);
+    } else if (event.key.toLowerCase() === 'e') {
+      this.selectTool(Tool.Eraser);
+    } else if (event.key.toLowerCase() === 'g') {
+      this.selectTool(Tool.Bucket);
+    } else if (event.key.toLowerCase() === 'i') {
+      this.selectTool(Tool.Eyedropper);
     }
   }
 

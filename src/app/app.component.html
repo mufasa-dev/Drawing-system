@@ -124,35 +124,35 @@
     <div class="container-tools p-1">
       <button class="btn btn-tool" 
         [class.active]="tool === Tool.Pencil"
-        [ngbTooltip]="'Pincel'" 
+        [ngbTooltip]="'Pincel (B)'" 
         placement="end"
         (click)="selectTool(Tool.Pencil)">
         <fa-icon [icon]="faPencil"></fa-icon>
       </button>
       <button class="btn btn-tool" 
         [class.active]="tool === Tool.Eraser"
-        [ngbTooltip]="'Borracha'" 
+        [ngbTooltip]="'Borracha (E)'" 
         placement="end"
         (click)="selectTool(Tool.Eraser)">
         <fa-icon [icon]="faEraser"></fa-icon>
       </button>
       <button class="btn btn-tool"
         [class.active]="tool === Tool.Bucket" 
-        [ngbTooltip]="'Balde de tinta'" 
+        [ngbTooltip]="'Balde de tinta (G)'" 
         placement="end"
         (click)="selectTool(Tool.Bucket)">
         <fa-icon [icon]="faFillDrip"></fa-icon>
       </button>
       <button class="btn btn-tool"
         [class.active]="tool === Tool.Eyedropper" 
-        [ngbTooltip]="'Conta-gotas'" 
+        [ngbTooltip]="'Conta-gotas (I)'" 
         placement="end"
         (click)="selectTool(Tool.Eyedropper)">
         <fa-icon [icon]="faEyeDropper"></fa-icon>
       </button>
       <button class="btn btn-tool"
         [class.active]="tool === Tool.Zoom" 
-        [ngbTooltip]="'Zoom'" 
+        [ngbTooltip]="'Zoom (Z)'" 
         placement="end"
         (click)="selectTool(Tool.Zoom)">
         <fa-icon [icon]="faSearch"></fa-icon>
@@ -172,7 +172,7 @@
           (click)="activeColorSlot = 'secondary'"
         ></div>
 
-        <button class="btn-swap" (click)="swapColors()" [ngbTooltip]="'Swap Colors (X)'">
+        <button class="btn-swap" (click)="swapColors()" [ngbTooltip]="'Swap Colors (X)'" placement="end">
           <fa-icon [icon]="faRotateLeft"></fa-icon>
         </button>
       </div>
