@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Inject, ViewChild } from '@angular/core';
 import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faBars, faBucket, faCogs, faEraser, faEyeDropper, faFile, faFolder, faPencil, faPlus, faSave, faSearch, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faBars, faBucket, faCogs, faEraser, faEyeDropper, faFile, faFolder, faPencil, faPlus, faRotateLeft, faSave, faSearch, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
@@ -47,13 +47,16 @@ export class AppComponent implements AfterViewInit {
   public zoomType: 'in' | 'out' = 'in';
   public layers: Layer[] = [];
   public activeLayerId: string = '';
-  public currentColor: string = '#000000';
   public countLayers: number = 1;
   public transformX = 0;
   public transformY = 0;
   public brushType: BrushType = BrushType.Round;
   public openBoxPreview: boolean = true;
   public openBoxColor: boolean = true;
+
+  public primaryColor: string = '#000000';
+  public secondaryColor: string = '#ffffff';
+  public activeColorSlot: 'primary' | 'secondary' = 'primary';
   
   public BrushType = BrushType;
   public Tool = Tool;
@@ -70,6 +73,8 @@ export class AppComponent implements AfterViewInit {
   public faFolder = faFolder;
   public faBucket =  faBucket;
   public faSearch = faSearch;
+  public faRotateLeft = faRotateLeft;
+  public faBan = faBan;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, 
         private modalService: NgbModal, 
@@ -167,10 +172,10 @@ export class AppComponent implements AfterViewInit {
       ctx.strokeStyle = 'rgba(0,0,0,1)';
     } else {
       ctx.globalCompositeOperation = 'source-over';
-      ctx.strokeStyle = this.currentColor;
+      ctx.strokeStyle = this.primaryColor;
     }
 
-    this.brushService.draw(ctx, x, y, this.brushType, this.lineWidth, this.currentColor, this.opacity, pressure);
+    this.brushService.draw(ctx, x, y, this.brushType, this.lineWidth, this.primaryColor, this.opacity, pressure);
 
     ctx.globalCompositeOperation = originalComposite;
     ctx.strokeStyle = originalStroke;
@@ -190,7 +195,7 @@ export class AppComponent implements AfterViewInit {
     const ctx = layer.ctx;
     const imageData = ctx.getImageData(0, 0, layer.canvas.width, layer.canvas.height);
 
-    this.floodFill(imageData, x, y, this.currentColor);
+    this.floodFill(imageData, x, y, this.primaryColor);
 
     ctx.putImageData(imageData, 0, 0);
 
@@ -219,7 +224,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   onColorChange(color: string) {
-    this.currentColor = rgbaStringToHex(color);
+    this.setColor(rgbaStringToHex(color));
     const active = this.getActiveLayer();
     if (active) active.ctx.strokeStyle = color;
   }
@@ -254,7 +259,7 @@ export class AppComponent implements AfterViewInit {
 
     ctx.lineCap = 'round';
     ctx.lineWidth = this.lineWidth;
-    ctx.strokeStyle = this.currentColor;
+    ctx.strokeStyle = this.primaryColor;
 
     container.appendChild(canvas);
 
@@ -307,7 +312,7 @@ export class AppComponent implements AfterViewInit {
     const ctx = canvas.getContext('2d')!;
     ctx.lineCap = 'round';
     ctx.lineWidth = this.lineWidth;
-    ctx.strokeStyle = this.currentColor;
+    ctx.strokeStyle = this.primaryColor;
 
     const newLayer: Layer = {
       id: crypto.randomUUID(),
@@ -356,7 +361,7 @@ export class AppComponent implements AfterViewInit {
     this.activeLayerId = id;
     this.layers.forEach(layer => {
       layer.canvas.style.pointerEvents = (layer.id === id) ? 'auto' : 'none';
-      layer.ctx.strokeStyle = this.currentColor;
+      layer.ctx.strokeStyle = this.primaryColor;
     });
   }
 
@@ -366,7 +371,7 @@ export class AppComponent implements AfterViewInit {
 
     const color = rgbaToHex(r, g,b);
 
-    this.currentColor = color;
+    this.setColor(color);
 
     const active = this.getActiveLayer();
     if (active) {
@@ -440,7 +445,7 @@ export class AppComponent implements AfterViewInit {
       const newCtx = oldCanvas.getContext('2d')!;
       newCtx.lineCap = 'round';
       newCtx.lineWidth = this.lineWidth;
-      newCtx.strokeStyle = this.currentColor;
+      newCtx.strokeStyle = this.primaryColor;
 
       newCtx.putImageData(imageData, 0, 0);
 
@@ -526,7 +531,7 @@ export class AppComponent implements AfterViewInit {
         ctx.drawImage(img, 0, 0);
         ctx.lineCap = 'round';
         ctx.lineWidth = this.lineWidth;
-        ctx.strokeStyle = this.currentColor;
+        ctx.strokeStyle = this.primaryColor;
 
         container.appendChild(canvas);
 
@@ -548,6 +553,20 @@ export class AppComponent implements AfterViewInit {
     reader.readAsDataURL(file);
   }
 
+  setColor(color: string) {
+    if (this.activeColorSlot === 'primary') {
+      this.primaryColor = color;
+    } else {
+      this.secondaryColor = color;
+    }
+  }
+
+  swapColors() {
+    const temp = this.primaryColor;
+    this.primaryColor = this.secondaryColor;
+    this.secondaryColor = temp;
+  }
+
   useCursorBrush(): boolean {
     return [Tool.Pencil, Tool.Eraser].includes(this.tool);
   }
@@ -557,6 +576,13 @@ export class AppComponent implements AfterViewInit {
     if (this.tool == Tool.Zoom && this.zoomType == 'in') return 'zoom-in';
     if (this.tool == Tool.Zoom && this.zoomType == 'out') return 'zoom-out';
     return 'default';
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeydown(event: KeyboardEvent) {
+    if (event.key.toLowerCase() === 'x') {
+      this.swapColors();
+    }
   }
 
 }

@@ -157,7 +157,25 @@
         (click)="selectTool(Tool.Zoom)">
         <fa-icon [icon]="faSearch"></fa-icon>
       </button>
-      <input type="color" [(ngModel)]="currentColor" (change)="onColorChange(currentColor)" />
+      <div class="color-swatches">
+        <div
+          class="color-swatch primary"
+          [class.active]="activeColorSlot === 'primary'"
+          [style.background]="primaryColor"
+          (click)="activeColorSlot = 'primary'"
+        ></div>
+
+        <div
+          class="color-swatch secondary"
+          [class.active]="activeColorSlot === 'secondary'"
+          [style.background]="secondaryColor"
+          (click)="activeColorSlot = 'secondary'"
+        ></div>
+
+        <button class="btn-swap" (click)="swapColors()" [ngbTooltip]="'Swap Colors (X)'">
+          <fa-icon [icon]="faRotateLeft"></fa-icon>
+        </button>
+      </div>
     </div>
 
     <div class="container-canva">
@@ -196,7 +214,7 @@
       <div class="tools-box">
         <div class="tbox-tittle" (click)="toggleBoxColor()">Cor</div>
         @if (openBoxColor) {
-          <app-color-picker [selectedColor]="currentColor" (colorSelected)="onColorChange($event)"></app-color-picker>
+          <app-color-picker [selectedColor]="activeColorSlot === 'primary' ? primaryColor : secondaryColor" (colorSelected)="onColorChange($event)"></app-color-picker>
         }
       </div>
 
