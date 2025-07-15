@@ -362,6 +362,11 @@ export class AppComponent implements AfterViewInit {
     }
 
     this.updatePreview();
+
+    if (this.layers.length == 0) {
+      this.countLayers = 1;
+      this.createLayer();
+    }
   }
 
   duplicateLayer() {
@@ -386,6 +391,7 @@ export class AppComponent implements AfterViewInit {
       const targetLayer = this.layers.find(l => l.id === newLayer.id);
       if (targetLayer?.ctx) {
         targetLayer.ctx.putImageData(imageData, 0, 0);
+        this.updatePreview();
       }
     });
   }
