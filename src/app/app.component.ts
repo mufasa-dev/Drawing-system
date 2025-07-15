@@ -499,36 +499,7 @@ export class AppComponent implements AfterViewInit {
 
   updatePreview() {
     if (!this.previewCanvasRef) return;
-
-    const previewCanvas = this.previewCanvasRef.nativeElement;
-    const previewCtx = previewCanvas.getContext('2d');
-    if (!previewCtx) return;
-
-    // define altura fixa
-    const fixedHeight = 150;
-    const originalWidth = this.picture.width;
-    const originalHeight = this.picture.height;
-
-    // calcula proporção da largura
-    const aspectRatio = originalWidth / originalHeight;
-    const scaledWidth = Math.round(fixedHeight * aspectRatio);
-
-    // ajusta tamanho do canvas
-    previewCanvas.width = scaledWidth;
-    previewCanvas.height = fixedHeight;
-
-    // limpa e desenha as layers escaladas
-    previewCtx.clearRect(0, 0, scaledWidth, fixedHeight);
-
-    this.layers.forEach(layer => {
-      if (!layer.visible) return;
-
-      previewCtx.drawImage(
-        layer.canvas,
-        0, 0, originalWidth, originalHeight,
-        0, 0, scaledWidth, fixedHeight
-      );
-    });
+    this.layerService.updatePreview(this.previewCanvasRef.nativeElement, this.picture);
   }
 
   saveDrawing() {

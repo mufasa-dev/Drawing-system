@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Layer } from '../model/layer.model';
+import { Picture } from '../model/picture.model';
 
 @Injectable({ providedIn: 'root' })
 export class LayerService {
@@ -137,6 +138,33 @@ export class LayerService {
     }, 50);
 
     return newLayer;
+  }
+
+  updatePreview(previewCanvas: HTMLCanvasElement, picture: Picture): void {
+    const previewCtx = previewCanvas.getContext('2d');
+    if (!previewCtx) return;
+
+    const fixedHeight = 150;
+    const originalWidth = picture.width;
+    const originalHeight = picture.height;
+
+    const aspectRatio = originalWidth / originalHeight;
+    const scaledWidth = Math.round(fixedHeight * aspectRatio);
+
+    previewCanvas.width = scaledWidth;
+    previewCanvas.height = fixedHeight;
+
+    previewCtx.clearRect(0, 0, scaledWidth, fixedHeight);
+
+    this.layers.forEach(layer => {
+      if (!layer.visible) return;
+
+      previewCtx.drawImage(
+        layer.canvas,
+        0, 0, originalWidth, originalHeight,
+        0, 0, scaledWidth, fixedHeight
+      );
+    });
   }
 
   clear() {
