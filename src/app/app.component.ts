@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-import { faBan, faBars, faCogs, faEraser, faEyeDropper, faFile, faFillDrip, faFolder, faPencil, faPlus, faRotateLeft, faSave, faSearch, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faBars, faCogs, faCrop, faEraser, faEyeDropper, faFile, faFillDrip, faFolder, faPencil, faPlus, faRotateLeft, faSave, faSearch, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID } from '@angular/core';
 import { Tool } from '../enum/tools.enum';
@@ -52,9 +52,14 @@ export class AppComponent implements AfterViewInit {
   public countLayers: number = 1;
   public transformX = 0;
   public transformY = 0;
+  public startX: number = 0;
+  public startY: number = 0;
+  public endX: number = 0;
+  public endY: number = 0;
   public brushType: BrushType = BrushType.Round;
   public openBoxPreview: boolean = true;
   public openBoxColor: boolean = true;
+  public isCropping: boolean = false;
 
   public primaryColor: string = '#000000';
   public secondaryColor: string = '#ffffff';
@@ -77,6 +82,7 @@ export class AppComponent implements AfterViewInit {
   public faSearch = faSearch;
   public faRotateLeft = faRotateLeft;
   public faBan = faBan;
+  public faCrop = faCrop;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, 
         private modalService: NgbModal, 
@@ -114,20 +120,19 @@ export class AppComponent implements AfterViewInit {
     this.updatePreview();
   }
 
-  startCanvas(): void {
-    if (this.isBrowser) {
-      const ctx = this.canva.nativeElement.getContext('2d');
-      if (ctx == null) {
-        console.log('error get ctx', this.canva)
-        return;
-      }
-      this.ctx = ctx;
-    }
-  }
-
   startDrawing(event: PointerEvent) {
     const layer = this.getActiveLayer();
     if (!layer) return;
+
+    if (this.tool === Tool.Crop) {
+      this.isCropping = true;
+      const { offsetX, offsetY } = event;
+      this.startX = offsetX;
+      this.startY = offsetY;
+      this.endX = offsetX;
+      this.endY = offsetY;
+      return;
+    }
 
     if (this.tool == Tool.Bucket) {
       this.startFill(event);
@@ -160,6 +165,10 @@ export class AppComponent implements AfterViewInit {
   }
 
   stopDrawing() {
+    if (this.tool === Tool.Crop && this.isCropping) {
+      this.isCropping = false;
+      this.performCrop();
+    } 
     this.drawing = false;
   }
 
@@ -174,6 +183,12 @@ export class AppComponent implements AfterViewInit {
   }
 
   draw(event: PointerEvent) {
+    if (this.tool === Tool.Crop && this.isCropping) {
+      this.endX = event.offsetX;
+      this.endY = event.offsetY;
+      //this.updateCropOverlay(); // opcional para mostrar visualmente
+    }
+
     if (!this.drawing) return;
 
     const layer = this.getActiveLayer();
@@ -475,6 +490,47 @@ export class AppComponent implements AfterViewInit {
       if (cy < height - 1) stack.push([cx, cy + 1]);
     }
   }
+
+  performCrop() {
+    debugger;
+    const x = Math.min(this.startX, this.endX);
+    const y = Math.min(this.startY, this.endY);
+    const width = Math.abs(this.endX - this.startX);
+    const height = Math.abs(this.endY - this.startY);
+
+    if (width === 0 || height === 0) return; // recorte inválido
+
+    this.layers.forEach(layer => {
+      const oldCanvas = layer.canvas;
+
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = width;
+      tempCanvas.height = height;
+
+      const tempCtx = tempCanvas.getContext('2d')!;
+      tempCtx.drawImage(oldCanvas, x, y, width, height, 0, 0, width, height);
+
+      // redefine o canvas
+      oldCanvas.width = width;
+      oldCanvas.height = height;
+      
+
+      setTimeout(() => {
+        const targetLayer = this.layers.find(l => l.id === layer.id);
+        if (targetLayer?.ctx) {
+          targetLayer.ctx.drawImage(tempCanvas, 0, 0);
+          this.updatePreview();
+        }
+      });
+    });
+
+    // Atualiza tamanho geral da imagem
+    this.picture.width = width;
+    this.picture.height = height;
+
+    this.updatePreview();
+  }
+
 
   resizeCanvas() {
     this.layers.forEach(layer => {

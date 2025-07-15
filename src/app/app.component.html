@@ -47,6 +47,9 @@
       } @else if (tool == Tool.Zoom) {
         <fa-icon [icon]="faSearch"></fa-icon>
         <b>Zoom</b>
+      } @else if (tool == Tool.Crop) {
+        <fa-icon [icon]="faCrop"></fa-icon>
+        <b>Crop</b>
       }
     </div>
     @if (useCursorBrush()) {
@@ -149,6 +152,13 @@
         placement="end"
         (click)="selectTool(Tool.Eyedropper)">
         <fa-icon [icon]="faEyeDropper"></fa-icon>
+      </button>
+      <button class="btn btn-tool"
+        [class.active]="tool === Tool.Eyedropper" 
+        [ngbTooltip]="'Cortar (C)'" 
+        placement="end"
+        (click)="selectTool(Tool.Crop)">
+        <fa-icon [icon]="faCrop"></fa-icon>
       </button>
       <button class="btn btn-tool"
         [class.active]="tool === Tool.Zoom" 

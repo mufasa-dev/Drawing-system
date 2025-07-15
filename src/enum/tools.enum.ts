@@ -3,5 +3,6 @@ export enum Tool {
   Eraser = 'eraser',
   Eyedropper = 'eyedropper',
   Bucket = 'bucket',
-  Zoom = 'zoom'
+  Zoom = 'zoom',
+  Crop = 'crop'
 }
