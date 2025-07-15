@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BrushType } from '../enum/brush-type.enum';
+import { hexToRgb } from '../utils/color.utils';
 
 @Injectable({ providedIn: 'root' })
 export class BrushService {
@@ -47,6 +48,57 @@ export class BrushService {
       const dx = Math.cos(angle) * r;
       const dy = Math.sin(angle) * r;
       ctx.fillRect(x + dx, y + dy, 1, 1);
+    }
+  }
+
+  public floodFill(imageData: ImageData, x: number, y: number, fillHex: string, tolerance: number = 30): void {
+    const { data, width, height } = imageData;
+    const index = (x: number, y: number) => (y * width + x) * 4;
+
+    const [rF, gF, bF] = hexToRgb(fillHex);
+    const stack: [number, number][] = [[x, y]];
+
+    const startIdx = index(x, y);
+    const targetColor = [
+      data[startIdx],
+      data[startIdx + 1],
+      data[startIdx + 2],
+      data[startIdx + 3]
+    ];
+
+    const matchColor = (i: number): boolean => {
+      const dr = data[i] - targetColor[0];
+      const dg = data[i + 1] - targetColor[1];
+      const db = data[i + 2] - targetColor[2];
+      const da = data[i + 3] - targetColor[3];
+
+      const distance = Math.sqrt(dr * dr + dg * dg + db * db + da * da);
+      return distance <= tolerance;
+    };
+
+    const setColor = (i: number) => {
+      data[i] = rF;
+      data[i + 1] = gF;
+      data[i + 2] = bF;
+      data[i + 3] = 255;
+    };
+
+    const visited = new Uint8Array(width * height);
+
+    while (stack.length > 0) {
+      const [cx, cy] = stack.pop()!;
+      const i = index(cx, cy);
+      const pixelIdx = cy * width + cx;
+
+      if (visited[pixelIdx] || !matchColor(i)) continue;
+
+      setColor(i);
+      visited[pixelIdx] = 1;
+
+      if (cx > 0) stack.push([cx - 1, cy]);
+      if (cx < width - 1) stack.push([cx + 1, cy]);
+      if (cy > 0) stack.push([cx, cy - 1]);
+      if (cy < height - 1) stack.push([cx, cy + 1]);
     }
   }
 }
