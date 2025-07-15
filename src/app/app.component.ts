@@ -117,7 +117,7 @@ export class AppComponent implements AfterViewInit {
         layer.ctx = canvasRef.nativeElement.getContext('2d')!;
         layer.ctx.lineCap = 'round';
         layer.ctx.lineWidth = this.lineWidth;
-        layer.ctx.strokeStyle = this.primaryColor;
+        layer.ctx.strokeStyle = this.getColor();
       }
     });
   }
@@ -218,10 +218,10 @@ export class AppComponent implements AfterViewInit {
       ctx.strokeStyle = 'rgba(0,0,0,1)';
     } else {
       ctx.globalCompositeOperation = 'source-over';
-      ctx.strokeStyle = this.primaryColor;
+      ctx.strokeStyle = this.getColor();
     }
 
-    this.brushService.draw(ctx, x, y, this.brushType, this.lineWidth, this.primaryColor, this.opacity, pressure);
+    this.brushService.draw(ctx, x, y, this.brushType, this.lineWidth, this.getColor(), this.opacity, pressure);
 
     ctx.globalCompositeOperation = originalComposite;
     ctx.strokeStyle = originalStroke;
@@ -241,7 +241,7 @@ export class AppComponent implements AfterViewInit {
     const ctx = layer.ctx;
     const imageData = ctx.getImageData(0, 0, layer.canvas.width, layer.canvas.height);
 
-    this.floodFill(imageData, x, y, this.primaryColor);
+    this.floodFill(imageData, x, y, this.getColor());
 
     ctx.putImageData(imageData, 0, 0);
 
@@ -347,7 +347,7 @@ export class AppComponent implements AfterViewInit {
     this.layerService.setActiveLayer(id);
     this.layers.forEach(layer => {
       layer.canvas.style.pointerEvents = (layer.id === id) ? 'auto' : 'none';
-      layer.ctx.strokeStyle = this.primaryColor;
+      layer.ctx.strokeStyle = this.getColor();
     });
   }
 
@@ -472,7 +472,7 @@ export class AppComponent implements AfterViewInit {
       const newCtx = oldCanvas.getContext('2d')!;
       newCtx.lineCap = 'round';
       newCtx.lineWidth = this.lineWidth;
-      newCtx.strokeStyle = this.primaryColor;
+      newCtx.strokeStyle = this.getColor();
 
       setTimeout(() => {
         const targetLayer = this.layers.find(l => l.id === layer.id);
@@ -547,7 +547,7 @@ export class AppComponent implements AfterViewInit {
         ctx.drawImage(img, 0, 0);
         ctx.lineCap = 'round';
         ctx.lineWidth = this.lineWidth;
-        ctx.strokeStyle = this.primaryColor;
+        ctx.strokeStyle = this.getColor();
 
         container.appendChild(canvas);
 
@@ -567,6 +567,14 @@ export class AppComponent implements AfterViewInit {
       img.src = e.target?.result as string;
     };
     reader.readAsDataURL(file);
+  }
+
+  getColor() {
+    if (this.activeColorSlot === 'primary') {
+      return this.primaryColor;
+    } else {
+      return this.secondaryColor;
+    }
   }
 
   setColor(color: string) {
