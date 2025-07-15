@@ -126,12 +126,15 @@ export class LayerService {
     newLayer.canvas.width = original.canvas.width;
     newLayer.canvas.height = original.canvas.height;
 
-    const ctx = newLayer.canvas.getContext('2d')!;
-    ctx.putImageData(imageData, 0, 0);
-    newLayer.ctx = ctx;
-
     this.layers.push(newLayer);
     this.activeLayerId = newLayer.id;
+
+    setTimeout(() => {
+      const targetLayer = this.layers.find(l => l.id === newLayer.id);
+      if (targetLayer?.ctx) {
+        targetLayer.ctx.putImageData(imageData, 0, 0);
+      }
+    }, 50);
 
     return newLayer;
   }
