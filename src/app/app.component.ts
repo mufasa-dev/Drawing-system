@@ -15,6 +15,7 @@ import { LayersComponent } from './layers/layers.component';
 import { BrushType } from '../enum/brush-type.enum';
 import { BrushService } from '../services/brush.service';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
+import { LayerService } from '../services/layer.service';
 
 @Component({
   selector: 'app-root',
@@ -47,9 +48,6 @@ export class AppComponent implements AfterViewInit {
   public zoom: number = 1;
   public zoomStep: number = 0.1;
   public zoomType: 'in' | 'out' = 'in';
-  public layers: Layer[] = [];
-  public activeLayerId: string = '';
-  public countLayers: number = 1;
   public transformX = 0;
   public transformY = 0;
   public startX: number = 0;
@@ -84,9 +82,18 @@ export class AppComponent implements AfterViewInit {
   public faBan = faBan;
   public faCrop = faCrop;
 
+  get layers(): Layer[] {
+    return this.layerService.getLayers();
+  }
+
+  get activeLayerId(): string {
+    return this.layerService.getActiveLayerId();
+  }
+
   constructor(@Inject(PLATFORM_ID) private platformId: Object, 
         private modalService: NgbModal, 
-        private brushService: BrushService) {
+        private brushService: BrushService,
+        private layerService: LayerService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
@@ -116,12 +123,12 @@ export class AppComponent implements AfterViewInit {
   }
 
   onLayersReordered(newOrder: Layer[]) {
-    this.layers = [...newOrder];
+    this.layerService.reorderLayers(newOrder);
     this.updatePreview();
   }
 
   startDrawing(event: PointerEvent) {
-    const layer = this.getActiveLayer();
+    const layer = this.layerService.getActiveLayer();
     if (!layer) return;
 
     if (this.tool === Tool.Crop) {
@@ -191,7 +198,7 @@ export class AppComponent implements AfterViewInit {
 
     if (!this.drawing) return;
 
-    const layer = this.getActiveLayer();
+    const layer = this.layerService.getActiveLayer();
     if (!layer) return;
 
     const ctx = layer.ctx;
@@ -224,7 +231,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   startFill(event: PointerEvent) {
-    const layer = this.getActiveLayer();
+    const layer = this.layerService.getActiveLayer();
     if (!layer) return;
 
     const rect = layer.canvas.getBoundingClientRect();
@@ -254,17 +261,13 @@ export class AppComponent implements AfterViewInit {
     this.cursorY = -9999;
   }
 
-  getActiveLayer() {
-    return this.layers.find(l => l.id === this.activeLayerId);
-  }
-
   selectTool(tool: Tool) {
     this.tool = tool;
   }
 
   onColorChange(color: string) {
     this.setColor(rgbaStringToHex(color));
-    const active = this.getActiveLayer();
+    const active = this.layerService.getActiveLayer();
     if (active) active.ctx.strokeStyle = color;
   }
   
@@ -282,19 +285,10 @@ export class AppComponent implements AfterViewInit {
   createNewPicture(picture: Picture) {
     this.picture = { ...picture };
 
-    this.layers.forEach(layer => layer.canvas.remove());
-    this.layers = [];
+    this.layerService.clear();
 
-    const newLayer = {
-      id: crypto.randomUUID(),
-      name: picture.name || 'Camada 1',
-      canvas: null!,
-      ctx: null!,
-      visible: true
-    };
-
-    this.layers.push(newLayer);
-    this.activeLayerId = newLayer.id;
+    let newLayer = this.layerService.createLayer();
+    this.layerService.setActiveLayerId(newLayer.id);
 
     this.updatePreview();
   }
@@ -326,78 +320,31 @@ export class AppComponent implements AfterViewInit {
   }
 
   createLayer() {
-    const newLayer: Layer = {
-      id: crypto.randomUUID(),
-      name: 'Camada ' + this.countLayers,
-      visible: true,
-      canvas: document.createElement('canvas'),
-      ctx: null!,
-    };
-
-    this.countLayers++;
-    this.layers.push(newLayer);
-    this.activeLayerId = newLayer.id;
+    this.layerService.createLayer();
 
     this.updatePreview();
   }
 
   toggleLayer(id: string) {
-    const layer = this.layers.find(l => l.id === id);
-    if (!layer) return;
-    layer.visible = !layer.visible;
-    layer.canvas.style.display = layer.visible ? 'block' : 'none';
+    this.layerService.toggleLayerVisibility(id);
 
     this.updatePreview();
   }
 
   removeLayer(id: string) {
-    const index = this.layers.findIndex(l => l.id === id);
-    if (index === -1) return;
-
-    const [layer] = this.layers.splice(index, 1);
-    layer.canvas.remove();
-
-    if (this.activeLayerId === layer.id && this.layers.length > 0) {
-      this.activeLayerId = this.layers[0].id;
-    }
+    this.layerService.removeLayerById(id);
 
     this.updatePreview();
-
-    if (this.layers.length == 0) {
-      this.countLayers = 1;
-      this.createLayer();
-    }
   }
 
   duplicateLayer() {
-    const index = this.layers.findIndex(l => l.id === this.activeLayerId);
-    if (index === -1) return;
+    this.layerService.duplicateLayer(this.activeLayerId);
 
-    const original = this.layers[index];
-    const imageData = original.ctx.getImageData(0, 0, original.canvas.width, original.canvas.height);
-
-    const newLayer: Layer = {
-      id: crypto.randomUUID(),
-      name: original.name + ' (Cópia)',
-      visible: true,
-      canvas: null!,
-      ctx: null!,
-    };
-
-    this.layers.splice(index + 1, 0, newLayer);
-    this.activeLayerId = newLayer.id;
-
-    setTimeout(() => {
-      const targetLayer = this.layers.find(l => l.id === newLayer.id);
-      if (targetLayer?.ctx) {
-        targetLayer.ctx.putImageData(imageData, 0, 0);
-        this.updatePreview();
-      }
-    });
+    this.updatePreview();
   }
 
   setActiveLayer(id: string) {
-    this.activeLayerId = id;
+    this.layerService.setActiveLayer(id);
     this.layers.forEach(layer => {
       layer.canvas.style.pointerEvents = (layer.id === id) ? 'auto' : 'none';
       layer.ctx.strokeStyle = this.primaryColor;
@@ -412,7 +359,7 @@ export class AppComponent implements AfterViewInit {
 
     this.setColor(color);
 
-    const active = this.getActiveLayer();
+    const active = this.layerService.getActiveLayer();
     if (active) {
       active.ctx.strokeStyle = color;
     }
@@ -617,7 +564,7 @@ export class AppComponent implements AfterViewInit {
         const container = document.querySelector('.my-canva') as HTMLElement;
 
         this.layers.forEach(layer => layer.canvas.remove());
-        this.layers = [];
+        this.layerService.reorderLayers([]);
 
         const layerId = crypto.randomUUID();
         const canvas = document.createElement('canvas');
@@ -641,7 +588,7 @@ export class AppComponent implements AfterViewInit {
           visible: true
         });
 
-        this.activeLayerId = layerId;
+        this.layerService.setActiveLayerId(layerId);
 
         this.updatePreview();
       };
