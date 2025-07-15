@@ -492,13 +492,12 @@ export class AppComponent implements AfterViewInit {
   }
 
   performCrop() {
-    debugger;
     const x = Math.min(this.startX, this.endX);
     const y = Math.min(this.startY, this.endY);
     const width = Math.abs(this.endX - this.startX);
     const height = Math.abs(this.endY - this.startY);
 
-    if (width === 0 || height === 0) return; // recorte inválido
+    if (width === 0 || height === 0) return;
 
     this.layers.forEach(layer => {
       const oldCanvas = layer.canvas;
@@ -510,7 +509,6 @@ export class AppComponent implements AfterViewInit {
       const tempCtx = tempCanvas.getContext('2d')!;
       tempCtx.drawImage(oldCanvas, x, y, width, height, 0, 0, width, height);
 
-      // redefine o canvas
       oldCanvas.width = width;
       oldCanvas.height = height;
       
@@ -524,7 +522,6 @@ export class AppComponent implements AfterViewInit {
       });
     });
 
-    // Atualiza tamanho geral da imagem
     this.picture.width = width;
     this.picture.height = height;
 
@@ -536,24 +533,20 @@ export class AppComponent implements AfterViewInit {
     this.layers.forEach(layer => {
       const oldCanvas = layer.canvas;
 
-      // Cria um snapshot do conteúdo antigo
       const tempCanvas = document.createElement('canvas');
       tempCanvas.width = oldCanvas.width;
       tempCanvas.height = oldCanvas.height;
       const tempCtx = tempCanvas.getContext('2d')!;
       tempCtx.drawImage(oldCanvas, 0, 0);
 
-      // ⚠️ Só agora alteramos o tamanho do canvas (isso apaga o conteúdo original!)
       oldCanvas.width = this.picture.width;
       oldCanvas.height = this.picture.height;
 
-      // Recria contexto e aplica configurações
       const newCtx = oldCanvas.getContext('2d')!;
       newCtx.lineCap = 'round';
       newCtx.lineWidth = this.lineWidth;
       newCtx.strokeStyle = this.primaryColor;
 
-      // Atualiza o contexto da layer
       setTimeout(() => {
         const targetLayer = this.layers.find(l => l.id === layer.id);
         if (targetLayer?.ctx) {
