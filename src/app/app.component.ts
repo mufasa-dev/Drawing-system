@@ -285,31 +285,11 @@ export class AppComponent implements AfterViewInit {
     this.layers.forEach(layer => layer.canvas.remove());
     this.layers = [];
 
-    const container = document.querySelector('.my-canva') as HTMLElement;
-
-    const canvas = document.createElement('canvas');
-    canvas.width = picture.width;
-    canvas.height = picture.height;
-    canvas.classList.add('absolute-canvas');
-
-    const ctx = canvas.getContext('2d')!;
-
-    if (picture.background === 'white') {
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    ctx.lineCap = 'round';
-    ctx.lineWidth = this.lineWidth;
-    ctx.strokeStyle = this.primaryColor;
-
-    container.appendChild(canvas);
-
     const newLayer = {
       id: crypto.randomUUID(),
       name: picture.name || 'Camada 1',
-      canvas,
-      ctx,
+      canvas: null!,
+      ctx: null!,
       visible: true
     };
 

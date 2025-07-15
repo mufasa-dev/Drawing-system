@@ -1,5 +1,5 @@
 export class Picture {
-  name: string = "";
+  name: string = "image";
   format: string = "png"
   width: number = 800;
   height: number = 600;
