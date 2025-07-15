@@ -225,8 +225,10 @@
       <div class="tools-box">
         <div class="tbox-tittle" (click)="toggleBoxPreview()">Preview</div>
         @if (openBoxPreview) {
-          <div class="canvas-preview back-square">
-            <canvas #previewCanvas></canvas>
+          <div class="canvas-preview">
+            <div class="back-square">
+              <canvas #previewCanvas></canvas>
+            </div>
           </div>
         }
       </div>

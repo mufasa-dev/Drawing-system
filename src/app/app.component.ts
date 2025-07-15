@@ -339,6 +339,8 @@ export class AppComponent implements AfterViewInit {
     this.countLayers++;
     this.layers.push(newLayer);
     this.activeLayerId = newLayer.id;
+
+    this.updatePreview();
   }
 
   toggleLayer(id: string) {
@@ -512,15 +514,29 @@ export class AppComponent implements AfterViewInit {
     const previewCtx = previewCanvas.getContext('2d');
     if (!previewCtx) return;
 
-    previewCtx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+    // define altura fixa
+    const fixedHeight = 150;
+    const originalWidth = this.picture.width;
+    const originalHeight = this.picture.height;
+
+    // calcula proporção da largura
+    const aspectRatio = originalWidth / originalHeight;
+    const scaledWidth = Math.round(fixedHeight * aspectRatio);
+
+    // ajusta tamanho do canvas
+    previewCanvas.width = scaledWidth;
+    previewCanvas.height = fixedHeight;
+
+    // limpa e desenha as layers escaladas
+    previewCtx.clearRect(0, 0, scaledWidth, fixedHeight);
 
     this.layers.forEach(layer => {
       if (!layer.visible) return;
 
       previewCtx.drawImage(
         layer.canvas,
-        0, 0, layer.canvas.width, layer.canvas.height,
-        0, 0, previewCanvas.width, previewCanvas.height
+        0, 0, originalWidth, originalHeight,
+        0, 0, scaledWidth, fixedHeight
       );
     });
   }
