@@ -20,6 +20,7 @@ export class LayersComponent {
   @Output() onRemoveLayer = new EventEmitter<string>();
   @Output() onToggleLayer = new EventEmitter<string>();
   @Output() onSetActiveLayer = new EventEmitter<string>();
+  @Output() layersReordered = new EventEmitter<Layer[]>();
 
   public selectedLayer: Layer  = new Layer();
   public newName: string = "";
@@ -67,6 +68,7 @@ export class LayersComponent {
 
   onDrop(event: CdkDragDrop<Layer[]>) {
     moveItemInArray(this.layers, event.previousIndex, event.currentIndex);
+    this.layersReordered.emit(this.layers);
   }
 
   trackById(index: number, layer: Layer) {

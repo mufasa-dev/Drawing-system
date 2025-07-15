@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { NgbModal, NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { faBan, faBars, faCogs, faEraser, faEyeDropper, faFile, faFillDrip, faFolder, faPencil, faPlus, faRotateLeft, faSave, faSearch, faUpload } from "@fortawesome/free-solid-svg-icons";
@@ -28,6 +28,8 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('canvas', { static: false }) canva!: ElementRef<HTMLCanvasElement>;
   @ViewChild('previewCanvas', { static: false }) previewCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('canvasContainer', { static: true }) canvasContainerRef!: ElementRef<HTMLDivElement>;
+
+  @ViewChildren('canvasRefs') canvasRefs!: QueryList<ElementRef<HTMLCanvasElement>>;
 
   public tool: Tool = Tool.Pencil;
   public theme: 'dark' | 'light' = 'dark';
@@ -83,11 +85,33 @@ export class AppComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-     if (this.isBrowser) {
+    if (this.isBrowser) {
       setTimeout(() => {
+        this.canvasRefs.changes.subscribe(() => {
+          this.syncCanvasContexts();
+        });
+        this.syncCanvasContexts();
         this.createLayer();
       }, 100);
     }
+  }
+
+  syncCanvasContexts() {
+    this.canvasRefs.forEach((canvasRef, index) => {
+      const layer = this.layers[index];
+      if (layer && !layer.ctx) {
+        layer.canvas = canvasRef.nativeElement;
+        layer.ctx = canvasRef.nativeElement.getContext('2d')!;
+        layer.ctx.lineCap = 'round';
+        layer.ctx.lineWidth = this.lineWidth;
+        layer.ctx.strokeStyle = this.primaryColor;
+      }
+    });
+  }
+
+  onLayersReordered(newOrder: Layer[]) {
+    this.layers = [...newOrder];
+    this.updatePreview();
   }
 
   startCanvas(): void {
@@ -304,34 +328,17 @@ export class AppComponent implements AfterViewInit {
   }
 
   createLayer() {
-    const canvas = document.createElement('canvas');
-    canvas.width = this.picture.width;
-    canvas.height = this.picture.height;
-    canvas.classList.add('absolute-canvas');
-
-    const ctx = canvas.getContext('2d')!;
-    ctx.lineCap = 'round';
-    ctx.lineWidth = this.lineWidth;
-    ctx.strokeStyle = this.primaryColor;
-
     const newLayer: Layer = {
       id: crypto.randomUUID(),
       name: 'Camada ' + this.countLayers,
       visible: true,
-      canvas,
-      ctx,
+      canvas: document.createElement('canvas'),
+      ctx: null!,
     };
-    this.countLayers++;
 
+    this.countLayers++;
     this.layers.push(newLayer);
     this.activeLayerId = newLayer.id;
-
-    const container = document.querySelector('.my-canva')!;
-    container.appendChild(canvas);
-
-    this.layers.forEach(l => {
-      l.canvas.style.pointerEvents = (l.id === this.activeLayerId) ? 'auto' : 'none';
-    });
   }
 
   toggleLayer(id: string) {

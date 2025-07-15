@@ -179,15 +179,35 @@
     </div>
 
     <div class="container-canva">
-      <div #canvasContainer class="my-canva" (pointerdown)="startDrawing($event)"
+       <div
+        #canvasContainer
+        class="my-canva"
+        (pointerdown)="startDrawing($event)"
         (pointermove)="draw($event); updateCursor($event)"
         (pointerup)="stopDrawing()"
         (pointerleave)="stopDrawing(); hideCursor()"
         (contextmenu)="callContextMenu($event)"
-        [style.cursor]="getToolCursor()">
-        <div class="back-square" [style.width.px]="picture.width" [style.height.px]="picture.height"></div>
+        [style.cursor]="getToolCursor()"
+      >
+        <div
+          class="back-square"
+          [style.width.px]="picture.width"
+          [style.height.px]="picture.height"
+        ></div>
+
+        <!-- renderiza os canvas pela ordem da array -->
+        <canvas
+          *ngFor="let layer of layers"
+          class="absolute-canvas"
+          [hidden]="!layer.visible"
+          [attr.data-id]="layer.id"
+          width="{{ picture.width }}"
+          height="{{ picture.height }}"
+          [style.pointer-events]="layer.id === activeLayerId ? 'auto' : 'none'"
+          #canvasRefs
+        ></canvas>
       </div>
-    
+
       <div
         class="brush-preview"
         [ngStyle]="{
@@ -224,7 +244,8 @@
         (onCreateLayer)="createLayer()"
         (onRemoveLayer)="removeLayer($event)"
         (onToggleLayer)="toggleLayer($event)"
-        (onSetActiveLayer)="setActiveLayer($event)">
+        (onSetActiveLayer)="setActiveLayer($event)"
+        (layersReordered)="onLayersReordered($event)">
       </app-layer-panel>
     </div>
   </div>

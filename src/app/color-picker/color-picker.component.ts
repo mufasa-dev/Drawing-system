@@ -82,6 +82,7 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
 
 
   drawHueRing() {
+    if (!this.hueCanvasRef) return;
     const canvas = this.hueCanvasRef.nativeElement;
     const ctx = canvas.getContext('2d')!;
     const width = canvas.width;
@@ -108,6 +109,7 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
   }
 
   drawSVBox() {
+    if (!this.svCanvasRef) return;
     const canvas = this.svCanvasRef.nativeElement;
     const ctx = canvas.getContext('2d')!;
     const width = canvas.width;
