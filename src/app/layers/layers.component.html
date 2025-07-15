@@ -18,6 +18,9 @@
     <button class="btn btn-sm" (click)="createLayer()" [ngbTooltip]="'Adicionar camada'">
       <fa-icon [icon]="faPlus"></fa-icon>
     </button>
+    <button class="btn btn-sm" (click)="duplicateLayer()" [ngbTooltip]="'Duplicar camada'">
+      <fa-icon [icon]="faClone"></fa-icon>
+    </button>
     <button class="btn btn-sm ms-auto" (click)="removeLayer(activeLayerId)" [ngbTooltip]="'Apagar camada'">
       <fa-icon [icon]="faTrash"></fa-icon>
     </button>

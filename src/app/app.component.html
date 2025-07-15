@@ -243,6 +243,7 @@
         [activeLayerId]="activeLayerId"
         (onCreateLayer)="createLayer()"
         (onRemoveLayer)="removeLayer($event)"
+        (onDuplicateLayer)="duplicateLayer()"
         (onToggleLayer)="toggleLayer($event)"
         (onSetActiveLayer)="setActiveLayer($event)"
         (layersReordered)="onLayersReordered($event)">

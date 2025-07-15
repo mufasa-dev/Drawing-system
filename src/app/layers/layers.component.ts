@@ -3,7 +3,7 @@ import { Layer } from '../../model/layer.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
-import { faBan, faEye, faPlus, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faClone, faEye, faPlus, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -18,6 +18,7 @@ export class LayersComponent {
 
   @Output() onCreateLayer = new EventEmitter<void>();
   @Output() onRemoveLayer = new EventEmitter<string>();
+  @Output() onDuplicateLayer = new EventEmitter<void>();
   @Output() onToggleLayer = new EventEmitter<string>();
   @Output() onSetActiveLayer = new EventEmitter<string>();
   @Output() layersReordered = new EventEmitter<Layer[]>();
@@ -31,6 +32,7 @@ export class LayersComponent {
   public faBan = faBan;
   public faTrash = faTrash;
   public faSave = faSave;
+  public faClone = faClone;
 
   constructor(private modalService: NgbModal) {
     
@@ -50,6 +52,10 @@ export class LayersComponent {
 
   setActiveLayer(id: string) {
     this.onSetActiveLayer.emit(id);
+  }
+
+  duplicateLayer() {
+    this.onDuplicateLayer.emit();
   }
 
   toggleOpenBox() {

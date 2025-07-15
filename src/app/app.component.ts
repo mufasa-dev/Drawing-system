@@ -364,6 +364,32 @@ export class AppComponent implements AfterViewInit {
     this.updatePreview();
   }
 
+  duplicateLayer() {
+    const index = this.layers.findIndex(l => l.id === this.activeLayerId);
+    if (index === -1) return;
+
+    const original = this.layers[index];
+    const imageData = original.ctx.getImageData(0, 0, original.canvas.width, original.canvas.height);
+
+    const newLayer: Layer = {
+      id: crypto.randomUUID(),
+      name: original.name + ' (Cópia)',
+      visible: true,
+      canvas: null!,
+      ctx: null!,
+    };
+
+    this.layers.splice(index + 1, 0, newLayer);
+    this.activeLayerId = newLayer.id;
+
+    setTimeout(() => {
+      const targetLayer = this.layers.find(l => l.id === newLayer.id);
+      if (targetLayer?.ctx) {
+        targetLayer.ctx.putImageData(imageData, 0, 0);
+      }
+    });
+  }
+
   setActiveLayer(id: string) {
     this.activeLayerId = id;
     this.layers.forEach(layer => {
