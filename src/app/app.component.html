@@ -154,7 +154,7 @@
         <fa-icon [icon]="faEyeDropper"></fa-icon>
       </button>
       <button class="btn btn-tool"
-        [class.active]="tool === Tool.Eyedropper" 
+        [class.active]="tool === Tool.Crop" 
         [ngbTooltip]="'Cortar (C)'" 
         placement="end"
         (click)="selectTool(Tool.Crop)">
@@ -195,7 +195,7 @@
         (pointerdown)="startDrawing($event)"
         (pointermove)="draw($event); updateCursor($event)"
         (pointerup)="stopDrawing()"
-        (pointerleave)="stopDrawing(); hideCursor()"
+        (pointerleave)="hideCursor()"
         (contextmenu)="callContextMenu($event)"
         [style.cursor]="getToolCursor()"
       >
@@ -227,6 +227,17 @@
           left: cursorX + 'px',
           display: useCursorBrush() ? 'block' : 'none',
           borderColor: tool === Tool.Eraser ? '#f00' : '#fff'
+        }"
+      ></div>
+
+      <div
+        class="crop-preview"
+        [ngStyle]="{
+          width: ((endX - startX) * zoom) + 'px',
+          height: ((endY - startY) * zoom) + 'px',
+          top: startY + 'px',
+          left: startX + 'px',
+          display: isCropping ? 'block' : 'none',
         }"
       ></div>
     </div>

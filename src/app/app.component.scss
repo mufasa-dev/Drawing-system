@@ -165,6 +165,13 @@
   mix-blend-mode: difference;
 }
 
+.crop-preview {
+  position: absolute;
+  border: 1px dashed white;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
 .layer-item {
   display: flex;
   align-items: center;
