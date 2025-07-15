@@ -479,21 +479,32 @@ export class AppComponent implements AfterViewInit {
   resizeCanvas() {
     this.layers.forEach(layer => {
       const oldCanvas = layer.canvas;
-      const oldCtx = layer.ctx;
 
-      const imageData = oldCtx.getImageData(0, 0, oldCanvas.width, oldCanvas.height);
+      // Cria um snapshot do conteúdo antigo
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = oldCanvas.width;
+      tempCanvas.height = oldCanvas.height;
+      const tempCtx = tempCanvas.getContext('2d')!;
+      tempCtx.drawImage(oldCanvas, 0, 0);
 
+      // ⚠️ Só agora alteramos o tamanho do canvas (isso apaga o conteúdo original!)
       oldCanvas.width = this.picture.width;
       oldCanvas.height = this.picture.height;
 
+      // Recria contexto e aplica configurações
       const newCtx = oldCanvas.getContext('2d')!;
       newCtx.lineCap = 'round';
       newCtx.lineWidth = this.lineWidth;
       newCtx.strokeStyle = this.primaryColor;
 
-      newCtx.putImageData(imageData, 0, 0);
-
-      layer.ctx = newCtx;
+      // Atualiza o contexto da layer
+      setTimeout(() => {
+        const targetLayer = this.layers.find(l => l.id === layer.id);
+        if (targetLayer?.ctx) {
+          targetLayer.ctx.drawImage(tempCanvas, 0, 0);
+          this.updatePreview();
+        }
+      });
     });
 
     this.updatePreview();
