@@ -255,6 +255,9 @@ export class AppComponent implements AfterViewInit {
   
   toggleBoxPreview() {
     this.openBoxPreview = !this.openBoxPreview;
+    if (this.openBoxPreview) {
+      setTimeout(() => this.updatePreview(), 100);
+    }
   }
 
   toggleBoxColor() {
