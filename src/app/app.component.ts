@@ -254,10 +254,9 @@ export class AppComponent implements AfterViewInit {
 
   updateCursor(event: PointerEvent) {
     const container = this.canvasContainerRef.nativeElement;
-    const rect = container.getBoundingClientRect();
 
-    const offsetX = event.clientX + container.scrollLeft;
-    const offsetY = event.clientY + container.scrollTop;
+    const offsetX = event.clientX;
+    const offsetY = event.clientY;
 
     this.cursorX = offsetX;
     this.cursorY = offsetY;
