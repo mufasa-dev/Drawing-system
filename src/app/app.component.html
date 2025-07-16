@@ -6,81 +6,23 @@
     (openResizeModal)="openResizeModal(resizeModal)"
   ></app-navbar>
 
-  <div class="top-tools">
-    <div class="tool-descri">
-      @if (tool == Tool.Pencil) {
-        <fa-icon [icon]="faPencil"></fa-icon>
-        <b>Pincel</b>
-      } @else if (tool == Tool.Eraser) {
-        <fa-icon [icon]="faEraser"></fa-icon>
-        <b>Borracha</b>
-      } @else if (tool == Tool.Eyedropper) {
-        <fa-icon [icon]="faEyeDropper"></fa-icon>
-        <b>Conta-gotas</b>
-      } @else if (tool == Tool.Bucket) {
-        <fa-icon [icon]="faFillDrip"></fa-icon>
-        <b>Balde de tinta</b>
-      } @else if (tool == Tool.Zoom) {
-        <fa-icon [icon]="faSearch"></fa-icon>
-        <b>Zoom</b>
-      } @else if (tool == Tool.Crop) {
-        <fa-icon [icon]="faCrop"></fa-icon>
-        <b>Crop</b>
-      }
-    </div>
-    @if (useCursorBrush()) {
-      <div class="container-slider-tools me-1">
-        <select class="form-select form-select-sm" [(ngModel)]="brushType" style="width: auto">
-          <option [value]="BrushType.Round">Padrão</option>
-          <option [value]="BrushType.Spray">Spray</option>
-          <option [value]="BrushType.Square">Quadrado</option>
-        </select>
-      </div>
-      <div class="container-slider-tools me-2">
-        <b class="form-label me-2 mb-0">Tamanho:</b>
-        <input
-          type="range"
-          min="1"
-          max="50"
-          [(ngModel)]="lineWidth"
-          class="form-range"
-          style="width: 150px;"
-        />
-        <span class="ms-1">{{ lineWidth }} px</span>
-      </div>
-      <div class="container-slider-tools">
-        <b class="form-label me-2 mb-0">Opacidade:</b>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.1"
-          [(ngModel)]="opacity"
-          class="form-range"
-          style="width: 150px;"
-        />
-        <span class="ms-1">{{ (opacity * 100) | number: '1.0-0' }}%</span>
-      </div>
-    }
-    <div class="container-slider-tools" *ngIf="tool == Tool.Bucket">
-      <label class="form-label me-2 mb-0">Tolerância:</label>
-      <input
-        type="range"
-        min="1"
-        max="50"
-        [(ngModel)]="tolerance"
-        class="form-range"
-        style="width: 150px;"
-      />
-      <span class="ms-1">{{ tolerance }} px</span>
-    </div>
-    <div class="container-slider-tools" *ngIf="tool == Tool.Zoom">
-      <select class="form-select form-select-sm" [(ngModel)]="zoomType">
-        <option value="in">Zoom In</option>
-        <option value="out">Zoom Out</option>
-      </select>
-    </div>
-  </div>
+  <app-config-tools
+    [tool]="tool"
+    [Tool]="Tool"
+    [BrushType]="BrushType"
+    [brushType]="brushType"
+    [lineWidth]="lineWidth"
+    [opacity]="opacity"
+    [tolerance]="tolerance"
+    [zoomType]="zoomType"
+    [zoom]="zoom"
+    (brushTypeChange)="brushType = $event"
+    (lineWidthChange)="lineWidth = $event"
+    (opacityChange)="opacity = $event"
+    (toleranceChange)="tolerance = $event"
+    (zoomTypeChange)="zoomType = $event"
+    (zoomChange)="zoom = $event; updateCanvasTransforms()"
+  />
 
   <div class="footer-menu">
     <div class="container-slider-tools ms-auto">
