@@ -24,10 +24,6 @@ export class NavbarComponent {
   @Output() openNewModal = new EventEmitter<void>();
   @Output() openResizeModal = new EventEmitter<void>();
   @Output() save = new EventEmitter<void>();
-  @Output() fileUpload = new EventEmitter<any>();
+  @Output() fileUpload = new EventEmitter<Event>();
   
-  onFileChange(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) this.fileUpload.emit(file);
-  }
 }

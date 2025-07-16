@@ -10,7 +10,7 @@
 
       <label class="dropdown-item">
         <fa-icon [icon]="faUpload"></fa-icon> Abrir
-        <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
+        <input type="file" accept="image/*" (change)="fileUpload.emit($event)" hidden />
       </label>
 
       <button class="dropdown-item" (click)="save.emit()">
