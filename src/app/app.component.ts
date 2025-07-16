@@ -259,8 +259,8 @@ export class AppComponent implements AfterViewInit {
     const offsetX = event.clientX + container.scrollLeft;
     const offsetY = event.clientY + container.scrollTop;
 
-    this.cursorX = offsetX / this.zoom;
-    this.cursorY = offsetY / this.zoom;
+    this.cursorX = offsetX;
+    this.cursorY = offsetY;
   }
 
   hideCursor() {
