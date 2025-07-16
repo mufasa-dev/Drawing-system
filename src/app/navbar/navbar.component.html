@@ -1,0 +1,26 @@
+<div class="top-menu">
+  <div ngbDropdown class="dropdown me-2">
+    <button class="btn btn-opt btn-sm dropdown-toggle" ngbDropdownToggle>
+      <fa-icon [icon]="faFolder"></fa-icon> Arquivo
+    </button>
+    <div ngbDropdownMenu>
+      <button class="dropdown-item" (click)="openNewModal.emit()">
+        <fa-icon [icon]="faFile"></fa-icon> Novo
+      </button>
+
+      <label class="dropdown-item">
+        <fa-icon [icon]="faUpload"></fa-icon> Abrir
+        <input type="file" accept="image/*" (change)="onFileChange($event)" hidden />
+      </label>
+
+      <button class="dropdown-item" (click)="save.emit()">
+        <fa-icon [icon]="faSave"></fa-icon> Salvar
+      </button>
+
+      <button class="dropdown-item" (click)="openResizeModal.emit()">
+        <fa-icon [icon]="faCogs"></fa-icon> Propriedades
+      </button>
+
+    </div>
+  </div>
+</div>

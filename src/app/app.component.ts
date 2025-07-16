@@ -16,11 +16,12 @@ import { BrushType } from '../enum/brush-type.enum';
 import { BrushService } from '../services/brush.service';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { LayerService } from '../services/layer.service';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @Component({
   selector: 'app-root',
   imports: [CommonModule, FontAwesomeModule, NgbModule, FormsModule, ConfigComponent, 
-            NewPictureComponent, LayersComponent, ColorPickerComponent],
+            NewPictureComponent, LayersComponent, ColorPickerComponent, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

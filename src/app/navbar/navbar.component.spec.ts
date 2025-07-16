@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing';
-import { NewPictureComponent } from './new-picture.component';
+import { NavbarComponent } from './navbar.component';
 
-describe('New Picture', () => {
+describe('Navbar', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [NewPictureComponent],
+      imports: [NavbarComponent],
     }).compileComponents();
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(NewPictureComponent);
+    const fixture = TestBed.createComponent(NavbarComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });

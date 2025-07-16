@@ -1,34 +1,10 @@
 <div>
-  <div class="top-menu">
-    <div ngbDropdown class="dropdown me-2">
-      <button class="btn btn-opt btn-sm dropdown-toggle" ngbDropdownToggle>
-        <fa-icon [icon]="faFolder"></fa-icon> Arquivo
-      </button>
-      <div ngbDropdownMenu>
-        <button class="dropdown-item" (click)="openResizeModal(newPictureModal)">
-          <fa-icon [icon]="faFile"></fa-icon> Novo
-        </button>
-
-        <label class="dropdown-item">
-          <fa-icon [icon]="faUpload"></fa-icon> Abrir
-          <input
-            type="file"
-            accept="image/*"
-            (change)="handleImageUpload($event)"
-            hidden
-          />
-        </label>
-
-        <button class="dropdown-item" (click)="saveDrawing()">
-          <fa-icon [icon]="faSave"></fa-icon> Salvar
-        </button>
-
-        <button class="dropdown-item" (click)="openResizeModal(resizeModal)">
-          <fa-icon [icon]="faCogs"></fa-icon> Propriedades
-        </button>
-      </div>
-    </div>
-  </div>
+  <app-navbar
+    (openNewModal)="openResizeModal(newPictureModal)"
+    (fileUpload)="handleImageUpload($event)"
+    (save)="saveDrawing()"
+    (openResizeModal)="openResizeModal(resizeModal)"
+  ></app-navbar>
 
   <div class="top-tools">
     <div class="tool-descri">
