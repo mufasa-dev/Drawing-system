@@ -249,11 +249,14 @@ export class AppComponent implements AfterViewInit {
   }
 
   updateCursor(event: PointerEvent) {
-    const canvasContainer = this.canvasContainerRef.nativeElement;
-    const rect = canvasContainer.getBoundingClientRect();
+    const container = this.canvasContainerRef.nativeElement;
+    const rect = container.getBoundingClientRect();
 
-    this.cursorX = event.clientX - rect.left;
-    this.cursorY = event.clientY - rect.top;
+    const offsetX = event.clientX + container.scrollLeft;
+    const offsetY = event.clientY + container.scrollTop;
+
+    this.cursorX = offsetX / this.zoom;
+    this.cursorY = offsetY / this.zoom;
   }
 
   hideCursor() {

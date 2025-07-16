@@ -188,9 +188,8 @@
       </div>
     </div>
 
-    <div class="container-canva">
+    <div #canvasContainer class="container-canva">
        <div
-        #canvasContainer
         class="my-canva"
         (pointerdown)="startDrawing($event)"
         (pointermove)="draw($event); updateCursor($event)"
