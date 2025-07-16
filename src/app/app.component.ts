@@ -32,6 +32,7 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('canvas', { static: false }) canva!: ElementRef<HTMLCanvasElement>;
   @ViewChild('previewCanvas', { static: false }) previewCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('canvasContainer', { static: true }) canvasContainerRef!: ElementRef<HTMLDivElement>;
+  @ViewChild('myCanva', { static: true }) myCanvaRef!: ElementRef<HTMLDivElement>;
 
   @ViewChildren('canvasRefs') canvasRefs!: QueryList<ElementRef<HTMLCanvasElement>>;
 
@@ -304,7 +305,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   zoomAt(mouseX: number, mouseY: number, factor: number) {
-    const container = this.canvasContainerRef.nativeElement;
+    const container = this.myCanvaRef.nativeElement;
     const rect = container.getBoundingClientRect();
 
     const prevZoom = this.zoom;
@@ -320,7 +321,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   updateCanvasTransforms() {
-    const canvasContainer = this.canvasContainerRef.nativeElement;
+    const canvasContainer = this.myCanvaRef.nativeElement;
     canvasContainer.style.transform = `translate(${this.transformX}px, ${this.transformY}px) scale(${this.zoom})`;
     canvasContainer.style.transformOrigin = 'top left';
   }

@@ -108,6 +108,7 @@
 
     <div #canvasContainer class="container-canva">
        <div
+        #myCanva
         class="my-canva"
         (pointerdown)="startDrawing($event)"
         (pointermove)="draw($event); updateCursor($event)"
