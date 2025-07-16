@@ -80,12 +80,6 @@
   }
 }
 
-.my-canva {
-  width: 100%;
-  height: calc(100vh - 100px);
-  background-color: transparent;
-}
-
 .back-square {
   background-color: #1e1e1e;
   background-image: 
@@ -149,10 +143,18 @@
 }
 
 .container-canva {
-  position: relative;
   width: calc(100% - 400px);
   height: calc(100vh - 120px);
   overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.my-canva {
+  position: relative;
+  width: fit-content;
+  background-color: transparent;
 }
 
 .brush-preview {
