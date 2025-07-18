@@ -13,7 +13,7 @@ import { BrushType } from '../../enum/brush-type.enum';
   selector: 'app-config-tools',
   imports: [ CommonModule, FontAwesomeModule, NgbModule, FormsModule ],
   templateUrl: './config-tools.component.html',
-  styleUrl: '../app.component.scss'
+  styleUrl: './config-tools.component.scss'
 })
 export class ConfigToolsComponent {
   

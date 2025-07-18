@@ -1,0 +1,15 @@
+.config-tools {
+  display: flex;
+  align-items: center;
+  background-color: #444;
+  border-bottom: 1px solid #222;
+  color: white;
+  width: 100%;
+  padding: 5px 15px;
+  & .tool-descri {
+    border-right: 1px solid white;
+    padding-right: 10px;
+    margin-right: 10px;
+    & b { margin-left: 5px; }
+  }
+}
