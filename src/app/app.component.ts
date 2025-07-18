@@ -18,12 +18,13 @@ import { ColorPickerComponent } from './color-picker/color-picker.component';
 import { LayerService } from '../services/layer.service';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ConfigToolsComponent } from './config-tools/config-tools.component';
+import { FooterComponent } from './footer/footer.component';
 
 @Component({
   selector: 'app-root',
   imports: [CommonModule, FontAwesomeModule, NgbModule, FormsModule, ConfigComponent, 
             NewPictureComponent, LayersComponent, ColorPickerComponent, NavbarComponent,
-            ConfigToolsComponent],
+            ConfigToolsComponent, FooterComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
