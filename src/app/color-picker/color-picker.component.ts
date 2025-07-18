@@ -48,8 +48,8 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['primaryColor'] && this.isBrowser) {
-      const color = changes['primaryColor'].currentValue;
+    if ((changes['primaryColor'] || changes['secondaryColor']  || changes['activeColorSlot'] ) && this.isBrowser) {
+      const color = changes['activeColorSlot'].currentValue == 'primary' ? changes['primaryColor'].currentValue : changes['secondaryColor'].currentValue;
       this.setColorFromExternal(color);
     }
   }
