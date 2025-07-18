@@ -16,8 +16,13 @@
   justify-content: center;
 }
 
+.colors-canvas {
+  cursor: pointer;
+}
+
 .hue-canvas {
   margin-left: 10px;
+  cursor: pointer;
 }
 
 .controls {
@@ -32,6 +37,7 @@
   height: 30px;
   border: 1px solid #aaa;
   border-radius: 4px;
+  cursor: pointer;
   &.active {
     border: 2px solid #0ff;
   }
