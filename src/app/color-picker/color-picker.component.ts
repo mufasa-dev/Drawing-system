@@ -25,7 +25,9 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
   @ViewChild('hueCanvas') hueCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('opacitySlider') opacitySliderRef!: ElementRef<HTMLInputElement>;
 
-  @Input() public selectedColor: string = 'rgba(0, 0, 0, 1)';
+  @Input() public primaryColor: string = 'rgba(0, 0, 0, 1)';
+  @Input() public secondaryColor: string = 'rgba(255, 255, 255, 1)';
+  @Input() public activeColorSlot: 'primary' | 'secondary' = 'primary';
   
   @Output() colorSelected = new EventEmitter<string>();
 
@@ -46,8 +48,8 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['selectedColor'] && this.isBrowser) {
-      const color = changes['selectedColor'].currentValue;
+    if (changes['primaryColor'] && this.isBrowser) {
+      const color = changes['primaryColor'].currentValue;
       this.setColorFromExternal(color);
     }
   }
@@ -172,7 +174,8 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
   emitColor() {
     const [r, g, b] = this.hsvToRgb(this.hue, this.saturation, this.value);
     const rgba = `rgba(${r}, ${g}, ${b}, 1)`;
-    this.selectedColor = rgba;
+    if (this.activeColorSlot == 'primary') this.primaryColor = rgba;
+    if (this.activeColorSlot == 'secondary') this.secondaryColor = rgba;
     this.colorSelected.emit(rgba);
   }
 
