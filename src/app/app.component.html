@@ -175,7 +175,7 @@
       <div class="tools-box">
         <div class="tbox-tittle" (click)="toggleBoxColor()">Cor</div>
         @if (openBoxColor) {
-          <app-color-picker [selectedColor]="activeColorSlot === 'primary' ? primaryColor : secondaryColor" (colorSelected)="onColorChange($event)"></app-color-picker>
+          <app-color-picker [activeColorSlot]="activeColorSlot" [primaryColor]="primaryColor" [secondaryColor]="secondaryColor" (colorSelected)="onColorChange($event)"></app-color-picker>
         }
       </div>
 
