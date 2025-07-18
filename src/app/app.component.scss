@@ -34,12 +34,6 @@
     }
 }
 
-.container-slider-tools {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .btn-opt {
   cursor: pointer;
   border: 0;
@@ -127,8 +121,8 @@
 }
 
 .container-canva {
-  width: calc(100% - 400px);
-  height: calc(100vh - 120px);
+  width: calc(100% - 550px);
+  height: calc(100vh - 90px);
   overflow: auto;
   display: flex;
   justify-content: center;

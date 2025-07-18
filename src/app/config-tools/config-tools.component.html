@@ -2,19 +2,19 @@
   <div class="tool-descri">
     @if (tool == Tool.Pencil) {
       <fa-icon [icon]="faPencil"></fa-icon>
-      <b>Pincel</b>
+      <label>Pincel</label>
     } @else if (tool == Tool.Eraser) {
       <fa-icon [icon]="faEraser"></fa-icon>
-      <b>Borracha</b>
+      <label>Borracha</label>
     } @else if (tool == Tool.Eyedropper) {
       <fa-icon [icon]="faEyeDropper"></fa-icon>
-      <b>Conta-gotas</b>
+      <label>Conta-gotas</label>
     } @else if (tool == Tool.Bucket) {
       <fa-icon [icon]="faFillDrip"></fa-icon>
-      <b>Balde de tinta</b>
+      <label>Balde de tinta</label>
     } @else if (tool == Tool.Zoom) {
       <fa-icon [icon]="faSearch"></fa-icon>
-      <b>Zoom</b>
+      <label>Zoom</label>
     } @else if (tool == Tool.Crop) {
       <fa-icon [icon]="faCrop"></fa-icon>
       <b>Crop</b>
@@ -32,7 +32,10 @@
     </div>
   
     <div class="container-slider-tools me-2">
-      <b class="form-label me-2 mb-0">Tamanho:</b>
+      <label class="form-label mb-0">
+        Tamanho:
+        <span class="ms-1">{{ lineWidth }} px</span>
+      </label>
       <input
         type="range"
         min="1"
@@ -40,13 +43,15 @@
         [ngModel]="lineWidth"
         (ngModelChange)="lineWidthChange.emit($event)"
         class="form-range"
-        style="width: 150px;"
+        style="width: 100px;"
       />
-      <span class="ms-1">{{ lineWidth }} px</span>
     </div>
   
     <div class="container-slider-tools">
-      <b class="form-label me-2 mb-0">Opacidade:</b>
+      <label class="form-label mb-0">
+        Opacidade:
+        <span class="ms-1">{{ (opacity * 100) | number: '1.0-0' }}%</span>
+      </label>
       <input
         type="range"
         min="0"
@@ -55,16 +60,18 @@
         [ngModel]="opacity"
         (ngModelChange)="opacityChange.emit($event)"
         class="form-range"
-        style="width: 150px;"
+        style="width: 100px;"
       />
-      <span class="ms-1">{{ (opacity * 100) | number: '1.0-0' }}%</span>
     </div>
   }
   
   <!--Se estiver usando balde de tinta-->
   @if (tool === Tool.Bucket) {
     <div class="container-slider-tools">
-      <label class="form-label me-2 mb-0">Tolerância:</label>
+      <label class="form-label mb-0">
+        Tolerância:
+        <span class="ms-1">{{ tolerance }} px</span>
+      </label>
       <input
         type="range"
         min="1"
@@ -72,9 +79,8 @@
         [ngModel]="tolerance"
         (ngModelChange)="toleranceChange.emit($event)"
         class="form-range"
-        style="width: 150px;"
+        style="width: 100px;"
       />
-      <span class="ms-1">{{ tolerance }} px</span>
     </div>
   }
   

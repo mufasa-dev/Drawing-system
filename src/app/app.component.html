@@ -6,24 +6,6 @@
     (openResizeModal)="openResizeModal(resizeModal)"
   ></app-navbar>
 
-  <app-config-tools
-    [tool]="tool"
-    [Tool]="Tool"
-    [BrushType]="BrushType"
-    [brushType]="brushType"
-    [lineWidth]="lineWidth"
-    [opacity]="opacity"
-    [tolerance]="tolerance"
-    [zoomType]="zoomType"
-    [zoom]="zoom"
-    (brushTypeChange)="brushType = $event"
-    (lineWidthChange)="lineWidth = $event"
-    (opacityChange)="opacity = $event"
-    (toleranceChange)="tolerance = $event"
-    (zoomTypeChange)="zoomType = $event"
-    (zoomChange)="zoom = $event; updateCanvasTransforms()"
-  />
-
   <div class="footer-menu">
     <div class="container-slider-tools ms-auto">
       <label class="form-label me-2 mb-0">Zoom: </label>
@@ -105,6 +87,24 @@
         </button>
       </div>
     </div>
+
+    <app-config-tools
+      [tool]="tool"
+      [Tool]="Tool"
+      [BrushType]="BrushType"
+      [brushType]="brushType"
+      [lineWidth]="lineWidth"
+      [opacity]="opacity"
+      [tolerance]="tolerance"
+      [zoomType]="zoomType"
+      [zoom]="zoom"
+      (brushTypeChange)="brushType = $event"
+      (lineWidthChange)="lineWidth = $event"
+      (opacityChange)="opacity = $event"
+      (toleranceChange)="tolerance = $event"
+      (zoomTypeChange)="zoomType = $event"
+      (zoomChange)="zoom = $event; updateCanvasTransforms()"
+    />
 
     <div #canvasContainer class="container-canva">
        <div

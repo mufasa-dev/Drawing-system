@@ -1,15 +1,28 @@
 .config-tools {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  background-color: #444;
-  border-bottom: 1px solid #222;
+  background-color: #222;
+  border: 1px solid #111;
   color: white;
-  width: 100%;
-  padding: 5px 15px;
+  width: 150px;
+  height: calc(100vh - 90px);
+  padding: 5px;
+  border-radius: 5px;
   & .tool-descri {
-    border-right: 1px solid white;
+    border-bottom: 1px solid #333;
     padding-right: 10px;
-    margin-right: 10px;
-    & b { margin-left: 5px; }
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
   }
+}
+
+.container-slider-tools {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-bottom: 1px solid #333;
+  margin-bottom: 5px;
 }
