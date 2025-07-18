@@ -276,6 +276,10 @@ export class AppComponent implements AfterViewInit {
     const active = this.layerService.getActiveLayer();
     if (active) active.ctx.strokeStyle = color;
   }
+
+  setActiveColor(type: 'primary' | 'secondary') {
+    this.activeColorSlot = type;
+  }
   
   toggleBoxPreview() {
     this.openBoxPreview = !this.openBoxPreview;

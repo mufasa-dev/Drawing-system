@@ -4,11 +4,13 @@
     <div class="controls">
       <div class="selected-color" 
         [class.active]="activeColorSlot == 'primary'"
-        [style.background]="primaryColor">
+        [style.background]="primaryColor"
+        (click)="emitUpdateActiveColor('primary')">
       </div>
       <div class="selected-color" 
         [class.active]="activeColorSlot == 'secondary'"
-        [style.background]="secondaryColor">
+        [style.background]="secondaryColor"
+        (click)="emitUpdateActiveColor('secondary')">
       </div>
     </div>
     <!-- Saturation / Value canvas -->

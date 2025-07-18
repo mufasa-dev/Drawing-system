@@ -30,6 +30,7 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
   @Input() public activeColorSlot: 'primary' | 'secondary' = 'primary';
   
   @Output() colorSelected = new EventEmitter<string>();
+  @Output() updateActiveColor = new EventEmitter<'primary' | 'secondary'>();
 
   public hue: number = 0; // 0 a 360
   public saturation: number = 1; // 0 a 1
@@ -197,5 +198,10 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
       Math.round((g + m) * 255),
       Math.round((b + m) * 255)
     ];
+  }
+
+  emitUpdateActiveColor(type: 'primary' | 'secondary') {
+    this.updateActiveColor.emit(type);
+    this.activeColorSlot = type;
   }
 }
