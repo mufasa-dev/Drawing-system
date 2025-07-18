@@ -2,7 +2,14 @@
   <div class="sv-hue-container">
     <!-- Cor atual e Opacidade -->
     <div class="controls">
-      <div class="selected-color" [style.background]="selectedColor"></div>
+      <div class="selected-color" 
+        [class.active]="activeColorSlot == 'primary'"
+        [style.background]="primaryColor">
+      </div>
+      <div class="selected-color" 
+        [class.active]="activeColorSlot == 'secondary'"
+        [style.background]="secondaryColor">
+      </div>
     </div>
     <!-- Saturation / Value canvas -->
     <canvas
