@@ -11,7 +11,8 @@ import {
   PLATFORM_ID,
   Input,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  ChangeDetectorRef
 } from '@angular/core';
 import { rgbToHsv } from '../../utils/color.utils';
 
@@ -37,7 +38,7 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
   public value: number = 1; // 0 a 1
   public isBrowser: boolean = false;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private cdRef: ChangeDetectorRef) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
@@ -165,6 +166,8 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
     this.value = 1 - y / rect.height;
     this.drawSVBox();
     this.emitColor();
+
+    this.cdRef.detectChanges();
   }
 
   onOpacityChange(event: Event) {
@@ -203,5 +206,10 @@ export class ColorPickerComponent implements AfterViewInit, OnChanges {
   emitUpdateActiveColor(type: 'primary' | 'secondary') {
     this.updateActiveColor.emit(type);
     this.activeColorSlot = type;
+
+    this.cdRef.detectChanges();
+
+    const newColor = type === 'primary' ? this.primaryColor : this.secondaryColor;
+    this.setColorFromExternal(newColor);
   }
 }
